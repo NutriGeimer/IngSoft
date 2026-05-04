@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mapa de Estacionamiento</title>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body>
+    <main class="parking-page">
+      <section class="parking-header">
+        <h1 class="parking-title">Mapa de Estacionamiento</h1>
+        <p class="parking-intro">
+          Visualiza los 50 cajones del estacionamiento. Los lugares ocupados se muestran en rojo y los disponibles en verde. Selecciona un cajón para marcarlo como ocupado.
+        </p>
+      </section>
+
+      <div class="parking-layout">
+        <div class="parking-map-card">
+          <div class="status-label">
+            <span class="status-chip free"></span> Libre
+          </div>
+          <div class="status-label">
+            <span class="status-chip occupied"></span> Ocupado
+          </div>
+
+          <div id="parkingMap" class="parking-grid" aria-label="Mapa de lugares de estacionamiento"></div>
+
+          <div class="parking-actions">
+            <button id="resetButton" class="btn btn-secondary" type="button">Reiniciar estados</button>
+          </div>
+        </div>
+
+        <div class="parking-summary-card">
+          <h2>Resumen del estacionamiento</h2>
+          <p id="currentUserInfo">Usuario en sesión: N/A</p>
+          <p id="selectedSpotInfo">Ningún cajón seleccionado</p>
+
+          <ul class="parking-summary-list">
+            <li>
+              <span>Total de lugares</span>
+              <strong>50</strong>
+            </li>
+            <li>
+              <span>Lugares libres</span>
+              <strong id="totalFree">0</strong>
+            </li>
+            <li>
+              <span>Lugares ocupados</span>
+              <strong id="totalOccupied">0</strong>
+            </li>
+          </ul>
+
+          <div class="parking-actions">
+            <button id="occupyButton" class="btn btn-primary" type="button" disabled>Marcar como ocupado</button>
+            <button id="leaveButton" class="btn btn-outline-primary" type="button" disabled>Retirar mi cajón</button>
+            <button id="clearSelectionButton" class="btn btn-secondary" type="button">Deseleccionar</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="assets/js/parking.js" defer></script>
+  </body>
+</html>

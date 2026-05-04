@@ -300,7 +300,7 @@ body {
 
 .parking-page {
   padding: 2rem 1rem 3rem;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
@@ -317,8 +317,8 @@ body {
 
 .parking-layout {
   display: grid;
-  grid-template-columns: 1.7fr 1fr;
-  gap: 1.5rem;
+  grid-template-columns: 2.3fr 0.7fr;
+  gap: 1rem;
 }
 
 .parking-map-card,
@@ -340,12 +340,12 @@ body {
 
 .parking-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(10, 1fr);
   gap: 0.9rem;
 }
 
 .slot {
-  min-height: 100px;
+  min-height: 120px;
   border-radius: 1rem;
   border: 2px solid transparent;
   padding: 0.9rem;

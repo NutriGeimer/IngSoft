@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeeParking | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#dadada",
+                    "tertiary-fixed": "#f4e2a9",
+                    "on-tertiary-fixed-variant": "#52461c",
+                    "on-tertiary-container": "#615529",
+                    "secondary": "#546067",
+                    "outline": "#827660",
+                    "primary-fixed": "#ffdf9e",
+                    "on-primary-container": "#6d5100",
+                    "on-tertiary-fixed": "#231b00",
+                    "on-primary-fixed": "#261a00",
+                    "tertiary": "#6b5e31",
+                    "inverse-on-surface": "#f1f1f1",
+                    "surface-container-high": "#e8e8e8",
+                    "on-secondary-fixed-variant": "#3c494f",
+                    "on-background": "#1a1c1c",
+                    "on-secondary-container": "#5a666d",
+                    "surface-container-highest": "#e2e2e2",
+                    "secondary-container": "#d7e4ec",
+                    "background": "#f9f9f9",
+                    "inverse-surface": "#2f3131",
+                    "primary": "#785900",
+                    "outline-variant": "#d4c5ab",
+                    "tertiary-fixed-dim": "#d7c690",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed-dim": "#bbc8d0",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "inverse-primary": "#fabd00",
+                    "surface-tint": "#785900",
+                    "surface-container-low": "#f3f3f3",
+                    "primary-fixed-dim": "#fabd00",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#ffc107",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#111d23",
+                    "surface-variant": "#e2e2e2",
+                    "on-surface-variant": "#4f4632",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff",
+                    "surface-container": "#eeeeee",
+                    "tertiary-container": "#dcca94",
+                    "on-error-container": "#93000a",
+                    "surface-bright": "#f9f9f9",
+                    "on-surface": "#1a1c1c",
+                    "secondary-fixed": "#d7e4ec",
+                    "surface": "#f9f9f9",
+                    "on-primary-fixed-variant": "#5b4300"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "md": "24px",
+                    "gutter": "24px",
+                    "xl": "64px",
+                    "xs": "4px",
+                    "base": "8px",
+                    "lg": "40px",
+                    "margin": "32px"
+            },
+            "fontFamily": {
+                    "h3": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "button": ["Inter"],
+                    "h2": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "h1": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "h3": ["24px", {"lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "button": ["16px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "h2": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "h1": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface">
+
+    <!-- TopAppBar -->
+    <header class="sticky top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm font-inter antialiased">
+        <div class="flex items-center gap-4">
+            <span class="text-xl font-black tracking-tighter text-slate-900 dark:text-white">BeeParking</span>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="hidden md:flex items-center gap-8 mr-4">
+                <a class="text-amber-600 dark:text-amber-400 font-bold border-b-2 border-amber-500" href="#">Dashboard</a>
+                <a class="text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">Access History</a>
+                <a class="text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">Parking Map</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Canvas -->
+    <main class="flex-1 flex flex-col items-center justify-center p-margin bg-background relative overflow-hidden">
+        <!-- Abstract background decorative elements -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+            <div class="absolute top-10 right-10 w-64 h-64 bg-primary-container rounded-full blur-3xl"></div>
+            <div class="absolute bottom-10 left-10 w-96 h-96 bg-secondary-container rounded-full blur-3xl"></div>
+        </div>
+        <div class="max-w-2xl w-full text-center z-10">
+            <div class="mb-lg space-y-4">
+                <h2 class="font-h1 text-h1 text-on-background">Listo para emitir.</h2>
+                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-md mx-auto">
+                    Genera un código QR de estacionamiento seguro para acceder al nodo de inmediato.
+                </p>
+            </div>
+            <!-- Central CTA Container -->
+            <div class="relative group flex justify-center">
+                <div class="absolute -inset-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+                <!--Boton QR-->
+                <button 
+                    id="openModal"
+                    class="relative w-full md:w-auto md:min-w-[400px] aspect-video bg-white border border-outline-variant rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center gap-6 p-xl"
+                    type = "button"
+                > 
+                    <div class="w-24 h-24 bg-primary-container rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-500">
+                        <span 
+                            class="material-symbols-outlined text-5xl text-on-primary-container" 
+                            data-icon="qr_code_scanner" 
+                            style="font-variation-settings: 'FILL' 0, 'wght' 300;">qr_code_scanner
+                        </span>
+                    </div>
+                    <div class="space-y-1">
+                        <span class="font-h3 text-h3 text-on-background block">Generar Código QR</span>
+                        <span class="font-label-caps text-label-caps text-slate-500 uppercase">Validación instantánea habilitada</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Estructura del Modal (Oculto por defecto con 'hidden') -->
+            <div id="modalOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            
+            <!-- Caja del Modal -->
+            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
+                
+                <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+                <h3 class="text-xl font-bold text-gray-800">Código QR</h3>
+                <button id="closeModal" class="text-gray-500 hover:text-red-500 transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+                </div>
+
+                 <!--Contenedor del QR-->
+                <div id="qrcode" class="flex justify-center items-center min-h-[200px] bg-white p-2 rounded-lg"></div>
+                
+                <div class="p-4 border-t bg-gray-50 flex justify-end gap-3">
+                <button class="px-4 py-2 bg-blue-600 text-white font-medium hover:bg-blue-700 rounded-lg shadow-md transition-colors">
+                    Volver a Cargar
+                </button>
+                </div>
+                
+            </div>
+            </div>
+
+            <div class="mt-xl flex items-center justify-center gap-gutter text-slate-400">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm" data-icon="verified_user">verified_user</span>
+                    <span class="font-body-sm text-body-sm">Cifrado Seguro</span>
+                </div>
+                <div class="w-1 h-1 bg-slate-300 rounded-full"></div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
+                    <span class="font-body-sm text-body-sm">Sincronización instantánea</span>
+                </div>
+            </div>
+        </div>
+    </main>
+  
+    <!--Librería para el QR-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script type="module" src="./assets/js/dashboard.js"></script>
+</body>
+</html>

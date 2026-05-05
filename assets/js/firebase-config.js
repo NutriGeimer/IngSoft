@@ -16,7 +16,13 @@
     appId: "1:528130557502:web:2b1bcefe75903d6a2ab36f"
   };
 
+<<<<<<< HEAD
   // Initialize Firebase
+=======
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app)
+>>>>>>> qenerarQR
 
 const app=initializeApp(firebaseConfig);
 const auth= getAuth(app);

@@ -3,7 +3,7 @@ import { hideAlert, showAlert, setButtonLoading, registerUser, getFirebaseErrorM
 const form=document.getElementById('registerForm')
 const nameInput=document.getElementById('name')
 const emailInput=document.getElementById('email')
-const cityInput=document.getElementById('city')
+const plateInput=document.getElementById('plates')
 const passwordInput=document.getElementById('password')
 const confirmPasswordInput=document.getElementById('confirmPassword')
 const registerBtn= document.getElementById('registerBtn')
@@ -18,7 +18,7 @@ form?.addEventListener('submit', async (e)=>{
 
     const name= nameInput.value.trim() 
     const email= emailInput.value.trim()
-    const favoriteCity=cityInput.value.trim() 
+    const nplates=plateInput.value.trim() 
     const password= passwordInput.value.trim() 
     const confirmPassword= confirmPasswordInput.value.trim() 
 
@@ -41,7 +41,7 @@ form?.addEventListener('submit', async (e)=>{
         setButtonLoading(registerBtn,true, '<i class="bi bi-person-check me-2"></i> crear cuenta', 
             'creando cuenta'
         )
-        await registerUser({name,email, password, favoriteCity})
+        await registerUser({name,email, password, nplates})
        
       // successBox?.textContent='cuenta creada correctamente'
       // successBox?.classList.remove('d-none')

@@ -37,7 +37,7 @@ export function setButtonLoading(button, isLoading, text, loadingText = "Procesa
     : text;
 }
  
-export async function registerUser({ name, email, password, favoriteCity }) {
+export async function registerUser({ name, email, password, nplates }) {
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   const user = credential.user;
  
@@ -45,7 +45,7 @@ export async function registerUser({ name, email, password, favoriteCity }) {
     uid: user.uid,
     name,
     email,
-    favoriteCity: favoriteCity || "",
+    nplates: nplates || "",
     createdAt: serverTimestamp()
   });
  

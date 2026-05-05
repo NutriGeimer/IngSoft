@@ -1,5 +1,5 @@
 import { db } from "./firebase-config.js"; 
-import {doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"
+import {doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js"
 
 const openModal = document.getElementById('openModal');
 const closeModal = document.getElementById('closeModal');

@@ -54,7 +54,7 @@ body {
 }
 
 .btn {
-<<<<<<< HEAD
+
   border-radius: 0.9rem;
   padding: 0.75rem 1.15rem;
   font-weight: 600;
@@ -84,14 +84,6 @@ body {
 .btn:disabled:hover {
   opacity: 0.6;
   cursor: not-allowed;
-=======
-  background-color: #EDAB1C;
-  border-color: #EDAB1C;
-}
-
-.linkLogin{
-  color: #805700;
->>>>>>> 626dccd8c186bc04b8bb9a87aa4d6df00c248041
 }
 
 .dashboard-page {

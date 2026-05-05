@@ -99,6 +99,23 @@ function updateSummary() {
 
   totalFree.textContent = freeCount;
   totalOccupied.textContent = occupiedCount;
+
+  const fill = document.getElementById('occupancyFill');
+
+  if (fill) {
+    const percent = (occupiedCount / TOTAL_SPOTS) * 100;
+
+    fill.style.width = Math.round(percent) + '%';
+
+    if (percent > 80) {
+      fill.style.background = '#dc3545';
+    } else if (percent > 50) {
+      fill.style.background = '#f59e0b';
+    } else {
+      fill.style.background = '#198754';
+    }
+  }
+
   currentUserInfo.textContent = `Usuario en sesión: ${currentUser}`;
 
   const selectedSpot = spots.find((spot) => spot.id === selectedSpotId) || null;

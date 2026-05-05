@@ -43,14 +43,23 @@
               <strong>50</strong>
             </li>
             <li>
-              <span>Lugares libres</span>
+              <span class="availability-label">
+                <span class="availability-dot free"></span>
+                Lugares disponibles
+              </span>
               <strong id="totalFree">0</strong>
             </li>
             <li>
-              <span>Lugares ocupados</span>
-              <strong id="totalOccupied">0</strong>
-            </li>
+            <span class="availability-label">
+              <span class="availability-dot occupied"></span>
+              Lugares ocupados
+            </span>
+            <strong id="totalOccupied">0</strong>
+          </li>
           </ul>
+          <div class="occupancy-bar">
+            <div id="occupancyFill"></div>
+          </div>
 
           <div class="parking-actions">
             <button id="occupyButton" class="btn btn-primary" type="button" disabled>Marcar como ocupado</button>

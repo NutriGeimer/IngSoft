@@ -11,7 +11,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-import { getCurrentUserProfile } from "./auth.js";
+import { getCurrentUserProfile, logoutUser } from "./auth.js";
 
 const COLLECTION = "accessHistory";
 
@@ -61,6 +61,8 @@ if (document.getElementById("historyTableBody")) {
     let allRecords = [];
 
     const tableBody = document.getElementById("historyTableBody");
+    const userNameLabel = document.getElementById("userNameLabel");
+    const logoutBtn = document.getElementById("logoutBtn");
     const searchInput = document.getElementById("searchInput");
     const filterAction = document.getElementById("filterAction");
     const filterDate = document.getElementById("filterDate");
@@ -73,7 +75,7 @@ if (document.getElementById("historyTableBody")) {
     onAuthStateChanged(auth, async (user) => {
         currentUser = user;
         if (!user) {
-            //si no hay sesion, redirigir al login
+            // si no hay sesión, redirigir al login
             window.location.href = "login.html";
             return;
         }
@@ -83,7 +85,12 @@ if (document.getElementById("historyTableBody")) {
 
         if (userNameLabel) userNameLabel.textContent = displayName;
 
-        await loadHistory();
+        logoutBtn?.addEventListener('click', async () => {
+          await logoutUser();
+          window.location.href = 'login.html';
+        });
+
+        await loadHistory(user.uid);
     });
 
     async function loadHistory(uid) {

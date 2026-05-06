@@ -1,12 +1,30 @@
-import { db } from "./firebase-config.js"; 
+import { db, auth } from "./firebase-config.js"; 
 import {doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js"
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
+import { getCurrentUserProfile, logoutUser } from "./auth.js";
 
 const openModal = document.getElementById('openModal');
 const closeModal = document.getElementById('closeModal');
 const cancelBtn = document.getElementById('cancelBtn');
 const modalOverlay = document.getElementById('modalOverlay');
 const qrContainer = document.getElementById("qrcode");
+const userNameLabel = document.getElementById('userNameLabel');
+const logoutBtn = document.getElementById('logoutBtn');
 
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+  const profile = await getCurrentUserProfile(user.uid);
+  const userName = profile?.name || user.email || "Usuario";
+  if (userNameLabel) userNameLabel.textContent = userName;
+});
+
+logoutBtn?.addEventListener('click', async () => {
+  await logoutUser();
+  window.location.href = 'login.html';
+});
 
 // Función principal para abrir modal y generar QR
 
@@ -50,9 +68,11 @@ const hideModal = () => {
 
 openModal.addEventListener('click', handleOpenModal); 
 closeModal.addEventListener('click', hideModal);
-cancelBtn.addEventListener('click', hideModal);
+if (cancelBtn) {
+  cancelBtn.addEventListener('click', hideModal);
+}
 
-//Cerrar al hacer click fuera del contenido del modal
+// Cerrar al hacer click fuera del contenido del modal
 modalOverlay.addEventListener('click', (e) => {
     if (e.target === modalOverlay) hideModal();
 });

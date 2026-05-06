@@ -1,10 +1,11 @@
-﻿import { auth } from "./firebase-config.js";
+﻿import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-import { getCurrentUserProfile } from "./auth.js";
+import { collection, doc, getDocs, query, orderBy, setDoc, updateDoc, serverTimestamp, writeBatch, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { getCurrentUserProfile, logoutUser } from "./auth.js";
 import { logAccess } from "./historialAccesos.js";
 
 const TOTAL_SPOTS = 50;
-const STORAGE_KEY = 'parkingSpotsStatus';
+const SPOTS_COLLECTION = "parkingSpots";
 
 const parkingMap = document.getElementById('parkingMap');
 const currentUserInfo = document.getElementById('currentUserInfo');
@@ -15,6 +16,8 @@ const leaveButton = document.getElementById('leaveButton');
 const clearSelectionButton = document.getElementById('clearSelectionButton');
 const totalFree = document.getElementById('totalFree');
 const totalOccupied = document.getElementById('totalOccupied');
+const userNameLabel = document.getElementById('userNameLabel');
+const logoutBtn = document.getElementById('logoutBtn');
 
 let spots = [];
 let selectedSpotId = null;
@@ -29,39 +32,52 @@ onAuthStateChanged(auth, async (user) => {
   firebaseUser = user;
   const profile = await getCurrentUserProfile(user.uid);
   userName = profile?.name || user.email || "Usuario";
-  loadSpots();
-  renderMap();
+  if (userNameLabel) userNameLabel.textContent = userName;
+  await initSpotListener();
+});
+
+logoutBtn?.addEventListener('click', async () => {
+  await logoutUser();
+  window.location.href = 'login.html';
 });
 
 
-function loadSpots() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length === TOTAL_SPOTS) {
-        spots = parsed.map((spot) => ({
-          id: spot.id,
-          occupiedBy: spot.occupiedBy || null,
-          occupiedByUid: spot.occupiedByUid || null,
-        }));
-        return;
-      }
-    } catch (error) {
-      console.warn('Error parsing estado de estacionamiento:', error);
+async function initSpotListener() {
+  const spotsQuery = query(collection(db, SPOTS_COLLECTION), orderBy('id'));
+  const snapshot = await getDocs(spotsQuery);
+
+  if (snapshot.size < TOTAL_SPOTS) {
+    await initializeSpots(snapshot);
+  }
+
+  onSnapshot(spotsQuery, (snapshot) => {
+    spots = snapshot.docs.map((doc) => ({
+      id: doc.data().id,
+      occupiedBy: doc.data().occupiedBy || null,
+      occupiedByUid: doc.data().occupiedByUid || null,
+    }));
+    renderMap();
+  });
+}
+
+async function initializeSpots(snapshot) {
+  const existingIds = new Set(snapshot.docs.map((doc) => doc.id));
+  const batch = writeBatch(db);
+
+  for (let index = 1; index <= TOTAL_SPOTS; index += 1) {
+    const spotId = String(index);
+    if (!existingIds.has(spotId)) {
+      const spotRef = doc(db, SPOTS_COLLECTION, spotId);
+      batch.set(spotRef, {
+        id: index,
+        occupiedBy: null,
+        occupiedByUid: null,
+        updatedAt: serverTimestamp(),
+      });
     }
   }
 
-  spots = Array.from({ length: TOTAL_SPOTS }, (_, index) => ({
-    id: index + 1,
-    occupiedBy: null,
-    occupiedByUid: null,
-  }));
-  saveSpots();
-}
-
-function saveSpots() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(spots));
+  await batch.commit();
 }
 
 function getCurrentUserSpot() {
@@ -81,7 +97,8 @@ function renderMap() {
     if (spot.occupiedByUid === firebaseUser?.uid) slot.classList.add('slot-mine');
     
     const statusLabel = spot.occupiedBy
-      ? spot.occupiedBy === firebaseUser?.uid ? 'Ocupado por ti': 'Ocupado' : 'Libre';
+      ? spot.occupiedByUid === firebaseUser?.uid ? 'Ocupado por ti' : 'Ocupado'
+      : 'Libre';
 
     slot.setAttribute('aria-pressed', spot.id === selectedSpotId ? 'true' : 'false');
     slot.innerHTML = `
@@ -103,7 +120,7 @@ function updateSummary() {
 
   totalFree.textContent = freeCount;
   totalOccupied.textContent = occupiedCount;
-  currentUserInfo.textContent = `Usuario en sesión: ${currentUser}`;
+  currentUserInfo.textContent = `Usuario en sesión: ${userName}`;
 
   const selectedSpot = spots.find((spot) => spot.id === selectedSpotId) || null;
 
@@ -116,7 +133,7 @@ function updateSummary() {
     return;
   }
 
-  if (selectedSpot.occupiedBy === currentUser) {
+  if (selectedSpot.occupiedByUid === firebaseUser?.uid) {
     selectedSpotInfo.textContent = `Cajón seleccionado: ${selectedSpot.id} — actualmente ocupado por ti`;
     occupyButton.disabled = true;
     leaveButton.disabled = false;
@@ -156,11 +173,14 @@ async function occupySelectedSpot() {
   selectedSpot.occupiedBy = userName;
   selectedSpot.occupiedByUid = firebaseUser?.uid || null;
 
-  saveSpots();
+  await updateDoc(doc(db, SPOTS_COLLECTION, String(selectedSpotId)), {
+    occupiedBy: selectedSpot.occupiedBy,
+    occupiedByUid: selectedSpot.occupiedByUid,
+    updatedAt: serverTimestamp(),
+  });
   renderMap();
 
-
-  //resgitar entrada en Firestore
+  // registrar entrada en Firestore
   await logAccess({
     uid: firebaseUser?.uid || "anonimo",
     userName: userName,
@@ -178,10 +198,14 @@ async function occupySelectedSpot() {
     currentUserSpot.occupiedByUid = null;
 
     if (selectedSpotId === spotId) selectedSpotId = null;
-    saveSpots();
+    await updateDoc(doc(db, SPOTS_COLLECTION, String(spotId)), {
+      occupiedBy: null,
+      occupiedByUid: null,
+      updatedAt: serverTimestamp(),
+    });
     renderMap();
 
-    //registrar salida en Firestore
+    // registrar salida en Firestore
     await logAccess({
       uid: firebaseUser?.uid || "anonimo",
       userName: userName,
@@ -190,10 +214,18 @@ async function occupySelectedSpot() {
     });
   }
 
-  function resetSpots() {
+  async function resetSpots() {
   if (!confirm('¿Deseas reiniciar todos los estados y dejar los 50 lugares libres?')) return;
-  spots = spots.map((spot) => ({ ...spot, occupiedBy: null, occupiedByUid: null }));
-  saveSpots();
+  const batch = writeBatch(db);
+  spots.forEach((spot) => {
+    const spotRef = doc(db, SPOTS_COLLECTION, String(spot.id));
+    batch.update(spotRef, {
+      occupiedBy: null,
+      occupiedByUid: null,
+      updatedAt: serverTimestamp(),
+    });
+  });
+  await batch.commit();
   renderMap();
   }
 

@@ -77,6 +77,22 @@ export async function updateCurrentUserProfile(uid,data){
 export function observeAuth(callback) {
   return onAuthStateChanged(auth, callback);
 }
+
+export function redirectToLoginIfNotAuthenticated(redirectPath = "login.html") {
+  return onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = redirectPath;
+    }
+  });
+}
+
+export function redirectToDashboardIfAuthenticated(redirectPath = "dashboard.html") {
+  return onAuthStateChanged(auth, (user) => {
+    if (user) {
+      window.location.href = redirectPath;
+    }
+  });
+}
  
 export async function logoutUser() {
   await signOut(auth);

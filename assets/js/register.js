@@ -47,7 +47,7 @@ form?.addEventListener('submit', async (e)=>{
       // successBox?.classList.remove('d-none')
 
        setTimeout(()=>{
-        window.location.href='./../../login.html'
+        window.location.href='./login.html'
        }, 1200)
     
     }catch(error){

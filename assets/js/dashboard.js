@@ -1,7 +1,26 @@
-import { db, auth } from "./firebase-config.js"; 
-import {doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js"
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-import { getCurrentUserProfile, logoutUser } from "./auth.js";
+import { 
+    db, 
+    auth 
+} from "./firebase-config.js"; 
+
+import {
+    doc, 
+    setDoc,
+    serverTimestamp 
+} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js"
+
+import {
+    getAuth,
+    onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
+
+import { 
+    getCurrentUserProfile, 
+    logoutUser
+ } from "./auth.js";
+
+ 
+
 
 const openModal = document.getElementById('openModal');
 const closeModal = document.getElementById('closeModal');
@@ -16,6 +35,9 @@ onAuthStateChanged(auth, async (user) => {
     window.location.href = "login.html";
     return;
   }
+  currentUser = user;
+ 
+
   const profile = await getCurrentUserProfile(user.uid);
   const userName = profile?.name || user.email || "Usuario";
   if (userNameLabel) userNameLabel.textContent = userName;
@@ -35,10 +57,11 @@ const handleOpenModal = async () => {
 
     //Generar token único
     const token = Math.random().toString(36).substring(2, 15);
-    const url = `https://tuapp.com/acceso.html?token=${token}`;
+    const url = `${window.location.origin}${window.location.pathname.replace('dashboard.html', 'access.html')}?token=${token}`;
+
 
     try { 
-        //Guardamos el token c
+        //Guardamos el token
         await setDoc(doc(db, "tokens_acceso", token), {
             active: true,
             createdAt: serverTimestamp(),
@@ -54,8 +77,7 @@ const handleOpenModal = async () => {
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H 
         });
-
-        console.log("QR generado y registrado en DB");
+        
     } catch (error) { 
         console.error("Error al guardar en Firebase:", error);
         qrContainer.innerHTML = "Error al generar código";

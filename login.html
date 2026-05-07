@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SignUp - BeeParking</title>
+  <title>Login - BeeParking</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -11,16 +11,12 @@
 </head>
 <body class="auth-page">
 
-
-  <!--Esta es la barra de menu-->
-  
   <nav class="navbar navbar-expand-lg navbar-light bg-warning shadow-sm">
     <div class="container">
       <a class="navbar-brand fw-bold text-dark" href="./dashboard.html">
         <i class="bi bi-buildings me-2"></i>
         BeeParking
       </a>
-
       <div class="d-flex align-items-center gap-2 ms-auto">
         <span class="text-white small d-none d-md-inline">
           <i class="bi bi-person-circle me-1"></i>
@@ -29,10 +25,6 @@
       </div>
     </div>
   </nav>
-    <!--Fin barra de menu-->
-
-
-
 
   <main class="min-vh-100 d-flex align-items-center justify-content-center auth-wrapper">
     <div class="container">
@@ -47,33 +39,22 @@
                   <p class="mb-0 text-white-75">La plataforma inteligente para el control de estacionamiento de las abejas.</p>
                 </div>
                 <div>
-                  <p class="mb-1 text-uppercase small letter-spacing text-white-75">Estacionamiento seguro</p>
+                  <p class="mb-1 text-uppercase small letter-spacing text-white-75">Bienvenido de nuevo</p>
                   <h3 class="h5 fw-bold">Elige tu cajón y disfruta</h3>
                 </div>
               </div>
               <div class="col-12 col-md-6 p-5 auth-form-panel bg-white">
                 <div class="text-center mb-4">
-                  <h1 class="h3 fw-bold mb-2">Crea tu cuenta</h1>
-                  <p class="text-secondary mb-0">Ingresa tus datos para iniciar BeeParking.</p>
+                  <h1 class="h3 fw-bold mb-2">Inicia sesión</h1>
+                  <p class="text-secondary mb-0">Ingresa con tu correo y contraseña para acceder a BeeParking.</p>
                 </div>
 
-                <div id="registerAlert" class="alert alert-danger d-none" role="alert"></div>
-                <div id="registerSuccess" class="alert alert-success d-none" role="alert"></div>
+                <div id="loginAlert" class="alert alert-danger d-none" role="alert"></div>
 
-                <form id="registerForm" novalidate>
-                  <div class="mb-3">
-                    <label for="name" class="form-label">NOMBRE COMPLETO</label>
-                    <input type="text" class="form-control form-control-lg" id="name" placeholder="Enrique Bunbury" required>
-                  </div>
-
+                <form id="loginForm" novalidate>
                   <div class="mb-3">
                     <label for="email" class="form-label">DIRECCIÓN DE EMAIL</label>
                     <input type="email" class="form-control form-control-lg" id="email" placeholder="ejemplo@correo.com" required>
-                  </div>
-
-                  <div class="mb-3">
-                    <label for="plates" class="form-label">PLACAS VEHICULARES</label>
-                    <input type="text" class="form-control form-control-lg" id="plates" placeholder="Ej. GTF235F">
                   </div>
 
                   <div class="mb-3">
@@ -81,20 +62,15 @@
                     <input type="password" class="form-control form-control-lg" id="password" placeholder="Mínimo 6 caracteres" required>
                   </div>
 
-                  <div class="mb-3">
-                    <label for="confirmPassword" class="form-label">CONFIRMAR CONTRASEÑA</label>
-                    <input type="password" class="form-control form-control-lg" id="confirmPassword" placeholder="Repite tu contraseña" required>
-                  </div>
-
                   <div class="d-grid mb-3">
-                    <button type="submit" id="registerBtn" class="btn btn-success btn-lg">
-                      <i class="bi bi-person-check me-2"></i>
-                      Crear cuenta
+                    <button type="submit" id="loginBtn" class="btn btn-success btn-lg">
+                      <i class="bi bi-box-arrow-in-right me-2"></i>
+                      Iniciar sesión
                     </button>
                   </div>
 
                   <div class="text-center">
-                    <p class="mb-0 text-secondary">¿Ya tienes cuenta? <a id="linkLogin" href="./login.html" class="fw-semibold text-decoration-none">Inicia sesión</a></p>
+                    <p class="mb-0 text-secondary">¿No tienes cuenta? <a href="./register.html" class="fw-semibold text-decoration-none">Regístrate aquí</a></p>
                   </div>
                 </form>
               </div>
@@ -106,6 +82,6 @@
     </div>
   </main>
 
-  <script type="module" src="./assets/js/register.js"></script>
+  <script type="module" src="./assets/js/login.js"></script>
 </body>
 </html>

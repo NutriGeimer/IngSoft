@@ -3,45 +3,81 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BeeParking</title>
+    <title>BeeParking | Parking</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/styles.css" />
+    <style>
+      body {
+        background-color: #f9f9f9;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
   </head>
-  <body>
-    <main class="parking-page">
-      <section class="parking-header">
-        <h1 class="parking-title">BeeParking</h1>
-        <p class="parking-intro">
-          Bienvenido a BeeParking. Selecciona tu cajón.
-        </p>
-      </section>
-
-      <div class="parking-layout">
-        <div class="parking-map-card">
-          <div class="status-label">
-            <span class="status-chip free"></span> Libre
+  <body class="font-body-md text-on-surface">
+    <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+      <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div class="flex items-center gap-4">
+          <span class="text-xl font-black tracking-tighter text-slate-900">BeeParking</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <div class="hidden md:flex items-center gap-8 mr-4">
+            <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="dashboard.html">Dashboard</a>
+            <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="historialAccesos.html">Historial</a>
+            <a class="text-amber-600 font-bold border-b-2 border-amber-500" href="parking.html">Parking</a>
           </div>
-          <div class="status-label">
-            <span class="status-chip occupied"></span> Ocupado
+          <span id="userNameLabel" class="text-sm font-semibold text-slate-600"></span>
+          <button id="logoutBtn" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">Cerrar sesión</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="parking-page mx-auto max-w-7xl px-6 py-10">
+      <div class="grid gap-6 lg:grid-cols-[2.5fr_1fr]">
+        <section class="rounded-[1.5rem] bg-white border border-slate-200 p-6 shadow-sm">
+          <div class="mb-6 flex flex-col gap-2">
+            <h1 class="text-3xl font-black tracking-tight text-slate-900">BeeParking</h1>
+            <p class="max-w-2xl text-slate-600">Bienvenido. Selecciona tu cajón de estacionamiento y controla tu acceso desde aquí.</p>
           </div>
 
-          <div id="parkingMap" class="parking-grid" aria-label="Mapa de lugares de estacionamiento"></div>
+          <div class="mb-4 flex flex-wrap gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800">Libre</span>
+            <span class="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-800">Ocupado</span>
+          </div>
 
-            <!-- Este boton solo sera una para vista de administrador --> 
-          <div class="parking-actions">
+          <div id="parkingMap" class="parking-grid grid gap-4" aria-label="Mapa de lugares de estacionamiento"></div>
+
+          <div class="mt-6 flex flex-wrap gap-3">
             <button id="resetButton" class="btn btn-secondary" type="button">Reiniciar estados</button>
           </div>
-        </div>
+        </section>
 
-        <div class="parking-summary-card">
-          <h2>Resumen del estacionamiento</h2>
-          <p id="currentUserInfo">Usuario en sesión: N/A</p>
-          <p id="selectedSpotInfo">Ningún cajón seleccionado</p>
+        <aside class="rounded-[1.5rem] bg-white border border-slate-200 p-6 shadow-sm">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-900">Resumen del estacionamiento</h2>
+            <p class="mt-2 text-slate-600">Tus estados personales y capacidad actual.</p>
+          </div>
 
-          <ul class="parking-summary-list">
-            <li>
-              <span>Total de lugares</span>
-              <strong>50</strong>
+          <div class="space-y-4">
+            <div class="rounded-3xl bg-slate-50 p-5">
+              <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Usuario en sesión</p>
+              <p id="currentUserInfo" class="mt-2 text-lg font-semibold text-slate-900">N/A</p>
+            </div>
+            <div class="rounded-3xl bg-slate-50 p-5">
+              <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Cajón seleccionado</p>
+              <p id="selectedSpotInfo" class="mt-2 text-lg font-semibold text-slate-900">Ningún cajón seleccionado</p>
+            </div>
+          </div>
+
+          <ul class="mt-6 space-y-4">
+            <li class="flex items-center justify-between rounded-3xl bg-slate-50 p-5">
+              <span class="text-sm text-slate-500">Total de lugares</span>
+              <strong class="text-lg text-slate-900">50</strong>
             </li>
+<<<<<<< HEAD
             <li>
               <span class="availability-label">
                 <span class="availability-dot free"></span>
@@ -56,20 +92,30 @@
             </span>
             <strong id="totalOccupied">0</strong>
           </li>
+=======
+            <li class="flex items-center justify-between rounded-3xl bg-slate-50 p-5">
+              <span class="text-sm text-slate-500">Lugares libres</span>
+              <strong id="totalFree" class="text-lg text-slate-900">0</strong>
+            </li>
+            <li class="flex items-center justify-between rounded-3xl bg-slate-50 p-5">
+              <span class="text-sm text-slate-500">Lugares ocupados</span>
+              <strong id="totalOccupied" class="text-lg text-slate-900">0</strong>
+            </li>
+>>>>>>> main
           </ul>
           <div class="occupancy-bar">
             <div id="occupancyFill"></div>
           </div>
 
-          <div class="parking-actions">
+          <div class="mt-6 grid gap-3">
             <button id="occupyButton" class="btn btn-primary" type="button" disabled>Marcar como ocupado</button>
             <button id="leaveButton" class="btn btn-outline-primary" type="button" disabled>Retirar mi cajón</button>
             <button id="clearSelectionButton" class="btn btn-secondary" type="button">Deseleccionar</button>
           </div>
-        </div>
+        </aside>
       </div>
     </main>
 
-    <script src="assets/js/parking.js" defer></script>
+    <script type="module" src="assets/js/parking.js"></script>
   </body>
 </html>

@@ -1,6 +1,11 @@
-﻿const TOTAL_SPOTS = 50;
-const STORAGE_KEY = 'parkingSpotsStatus';
-const USER_SESSION_KEY = 'parkingCurrentUser';
+﻿import { db, auth } from "./firebase-config.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
+import { collection, doc, getDocs, query, orderBy, setDoc, updateDoc, serverTimestamp, writeBatch, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { getCurrentUserProfile, logoutUser } from "./auth.js";
+import { logAccess } from "./historialAccesos.js";
+
+const TOTAL_SPOTS = 50;
+const SPOTS_COLLECTION = "parkingSpots";
 
 const parkingMap = document.getElementById('parkingMap');
 const currentUserInfo = document.getElementById('currentUserInfo');
@@ -11,53 +16,75 @@ const leaveButton = document.getElementById('leaveButton');
 const clearSelectionButton = document.getElementById('clearSelectionButton');
 const totalFree = document.getElementById('totalFree');
 const totalOccupied = document.getElementById('totalOccupied');
+const userNameLabel = document.getElementById('userNameLabel');
+const logoutBtn = document.getElementById('logoutBtn');
 
 let spots = [];
 let selectedSpotId = null;
-let currentUser = getCurrentUser();
+let firebaseUser = null; //Se llena cuando Firebase confirma la sesion
+let userName = "Usuario";
 
-function getCurrentUser() {
-  let user = sessionStorage.getItem(USER_SESSION_KEY);
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    user = prompt('Ingresa tu nombre de usuario para esta sesión:', 'Usuario1') || `Usuario_${Math.floor(Math.random() * 1000)}`;
-    sessionStorage.setItem(USER_SESSION_KEY, user);
+    window.location.href = "login.html";
+    return;
   }
-  return user;
+  firebaseUser = user;
+  const profile = await getCurrentUserProfile(user.uid);
+  userName = profile?.name || user.email || "Usuario";
+  if (userNameLabel) userNameLabel.textContent = userName;
+  await initSpotListener();
+});
+
+logoutBtn?.addEventListener('click', async () => {
+  await logoutUser();
+  window.location.href = 'login.html';
+});
+
+
+async function initSpotListener() {
+  const spotsQuery = query(collection(db, SPOTS_COLLECTION), orderBy('id'));
+  const snapshot = await getDocs(spotsQuery);
+
+  if (snapshot.size < TOTAL_SPOTS) {
+    await initializeSpots(snapshot);
+  }
+
+  onSnapshot(spotsQuery, (snapshot) => {
+    spots = snapshot.docs.map((doc) => ({
+      id: doc.data().id,
+      occupiedBy: doc.data().occupiedBy || null,
+      occupiedByUid: doc.data().occupiedByUid || null,
+    }));
+    renderMap();
+  });
 }
 
-function loadSpots() {
-  const saved = localStorage.getItem(STORAGE_KEY);
+async function initializeSpots(snapshot) {
+  const existingIds = new Set(snapshot.docs.map((doc) => doc.id));
+  const batch = writeBatch(db);
 
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length === TOTAL_SPOTS) {
-        spots = parsed.map((spot) => ({
-          id: spot.id,
-          occupiedBy: spot.occupiedBy || null,
-        }));
-        return;
-      }
-    } catch (error) {
-      console.warn('Error parsing estado de estacionamiento:', error);
+  for (let index = 1; index <= TOTAL_SPOTS; index += 1) {
+    const spotId = String(index);
+    if (!existingIds.has(spotId)) {
+      const spotRef = doc(db, SPOTS_COLLECTION, spotId);
+      batch.set(spotRef, {
+        id: index,
+        occupiedBy: null,
+        occupiedByUid: null,
+        updatedAt: serverTimestamp(),
+      });
     }
   }
 
-  spots = Array.from({ length: TOTAL_SPOTS }, (_, index) => ({
-    id: index + 1,
-    occupiedBy: null,
-  }));
-  saveSpots();
-}
-
-function saveSpots() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(spots));
+  await batch.commit();
 }
 
 function getCurrentUserSpot() {
-  return spots.find((spot) => spot.occupiedBy === currentUser) || null;
+  return spots.find((spot) => spot.occupiedByUid === firebaseUser?.uid) || null;
 }
 
+//render
 function renderMap() {
   parkingMap.innerHTML = '';
 
@@ -66,17 +93,11 @@ function renderMap() {
     slot.type = 'button';
     slot.className = 'slot';
     slot.classList.add(spot.occupiedBy ? 'slot-occupied' : 'slot-free');
-    if (spot.id === selectedSpotId) {
-      slot.classList.add('slot-selected');
-    }
-    if (spot.occupiedBy === currentUser) {
-      slot.classList.add('slot-mine');
-    }
-
+    if (spot.id === selectedSpotId) slot.classList.add('slot-selected');
+    if (spot.occupiedByUid === firebaseUser?.uid) slot.classList.add('slot-mine');
+    
     const statusLabel = spot.occupiedBy
-      ? spot.occupiedBy === currentUser
-        ? 'Ocupado por ti'
-        : 'Ocupado'
+      ? spot.occupiedByUid === firebaseUser?.uid ? 'Ocupado por ti' : 'Ocupado'
       : 'Libre';
 
     slot.setAttribute('aria-pressed', spot.id === selectedSpotId ? 'true' : 'false');
@@ -116,7 +137,7 @@ function updateSummary() {
     }
   }
 
-  currentUserInfo.textContent = `Usuario en sesión: ${currentUser}`;
+  currentUserInfo.textContent = `Usuario en sesión: ${userName}`;
 
   const selectedSpot = spots.find((spot) => spot.id === selectedSpotId) || null;
 
@@ -129,7 +150,7 @@ function updateSummary() {
     return;
   }
 
-  if (selectedSpot.occupiedBy === currentUser) {
+  if (selectedSpot.occupiedByUid === firebaseUser?.uid) {
     selectedSpotInfo.textContent = `Cajón seleccionado: ${selectedSpot.id} — actualmente ocupado por ti`;
     occupyButton.disabled = true;
     leaveButton.disabled = false;
@@ -153,62 +174,84 @@ function handleSpotClick(id) {
   renderMap();
 }
 
-function occupySelectedSpot() {
-  if (selectedSpotId === null) {
-    return;
-  }
+// ocupar cajon + registrar entrada
+async function occupySelectedSpot() {
+  if (selectedSpotId === null) return;
 
   const selectedSpot = spots.find((spot) => spot.id === selectedSpotId);
   const currentUserSpot = getCurrentUserSpot();
 
-  if (!selectedSpot || selectedSpot.occupiedBy !== null) {
-    return;
-  }
-
+  if (!selectedSpot || selectedSpot.occupiedBy !== null) return;
   if (currentUserSpot) {
-    alert(`Ya tienes el cajón ${currentUserSpot.id} ocupado. Libéralo antes de ocupar otro.`);
+    alert(`Ya tienes el cajon ${currentUserSpot.id} ocupado. Liberalo antes de ocupar otro`);
     return;
   }
 
-  selectedSpot.occupiedBy = currentUser;
-  saveSpots();
+  selectedSpot.occupiedBy = userName;
+  selectedSpot.occupiedByUid = firebaseUser?.uid || null;
+
+  await updateDoc(doc(db, SPOTS_COLLECTION, String(selectedSpotId)), {
+    occupiedBy: selectedSpot.occupiedBy,
+    occupiedByUid: selectedSpot.occupiedByUid,
+    updatedAt: serverTimestamp(),
+  });
   renderMap();
+
+  // registrar entrada en Firestore
+  await logAccess({
+    uid: firebaseUser?.uid || "anonimo",
+    userName: userName,
+    spotId: selectedSpotId,
+    action: "entrada",
+  });
 }
+  //liberar cajon + registrar salida
+  async function leaveSelectedSpot() {
+    const currentUserSpot = getCurrentUserSpot();
+    if (!currentUserSpot) return;
 
-function leaveSelectedSpot() {
-  const currentUserSpot = getCurrentUserSpot();
-  if (!currentUserSpot) {
-    return;
+    const spotId = currentUserSpot.id;
+    currentUserSpot.occupiedBy = null;
+    currentUserSpot.occupiedByUid = null;
+
+    if (selectedSpotId === spotId) selectedSpotId = null;
+    await updateDoc(doc(db, SPOTS_COLLECTION, String(spotId)), {
+      occupiedBy: null,
+      occupiedByUid: null,
+      updatedAt: serverTimestamp(),
+    });
+    renderMap();
+
+    // registrar salida en Firestore
+    await logAccess({
+      uid: firebaseUser?.uid || "anonimo",
+      userName: userName,
+      spotId: spotId,
+      action: "salida",
+    });
   }
 
-  currentUserSpot.occupiedBy = null;
-  if (selectedSpotId === currentUserSpot.id) {
-    selectedSpotId = null;
-  }
-  saveSpots();
+  async function resetSpots() {
+  if (!confirm('¿Deseas reiniciar todos los estados y dejar los 50 lugares libres?')) return;
+  const batch = writeBatch(db);
+  spots.forEach((spot) => {
+    const spotRef = doc(db, SPOTS_COLLECTION, String(spot.id));
+    batch.update(spotRef, {
+      occupiedBy: null,
+      occupiedByUid: null,
+      updatedAt: serverTimestamp(),
+    });
+  });
+  await batch.commit();
   renderMap();
-}
-
-function resetSpots() {
-  if (!confirm('¿Deseas reiniciar todos los estados y dejar los 50 lugares libres?')) {
-    return;
   }
 
-  spots = spots.map((spot) => ({ ...spot, occupiedBy: null }));
+  function clearSelection() {
   selectedSpotId = null;
-  saveSpots();
   renderMap();
-}
+  }
 
-function clearSelection() {
-  selectedSpotId = null;
-  renderMap();
-}
-
-occupyButton.addEventListener('click', occupySelectedSpot);
-resetButton.addEventListener('click', resetSpots);
-leaveButton.addEventListener('click', leaveSelectedSpot);
-clearSelectionButton.addEventListener('click', clearSelection);
-
-loadSpots();
-renderMap();
+  occupyButton.addEventListener('click', occupySelectedSpot);
+  resetButton.addEventListener('click', resetSpots);
+  leaveButton.addEventListener('click', leaveSelectedSpot);
+  clearSelectionButton.addEventListener('click', clearSelection);

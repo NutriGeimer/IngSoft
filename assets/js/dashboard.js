@@ -9,10 +9,7 @@ import {
     serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js"
 
-import {
-    getAuth,
-    onAuthStateChanged 
-} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
 
 import { 
     getCurrentUserProfile, 
@@ -21,6 +18,7 @@ import {
 
  
 
+let currentUser = null; 
 
 const openModal = document.getElementById('openModal');
 const closeModal = document.getElementById('closeModal');
@@ -51,6 +49,10 @@ logoutBtn?.addEventListener('click', async () => {
 // Función principal para abrir modal y generar QR
 
 const handleOpenModal = async () => {
+    if (!currentUser) {
+        alert("Esperando autentificación...");
+        return;
+    }
 
     qrContainer.innerHTML = ""; //borra cualquier QR que se haya generado antes
     modalOverlay.classList.remove('hidden'); // de todas las clases del contenedor modelOverlay remover el hidden
@@ -64,6 +66,8 @@ const handleOpenModal = async () => {
         //Guardamos el token
         await setDoc(doc(db, "tokens_acceso", token), {
             active: true,
+            uid: currentUser.uid, 
+            email: currentUser.email,
             createdAt: serverTimestamp(),
             url: url
         });
@@ -77,6 +81,14 @@ const handleOpenModal = async () => {
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H 
         });
+
+        console.log("QR generado para:", currentUser.email);
+
+        setTimeout(() => {
+            window.location.href = url; 
+        }, 3000); // Espera 3 segundos para que alcancen a ver el QR y luego se va a acceso.html
+
+        console.log("QR generado y registrado en DB");
         
     } catch (error) { 
         console.error("Error al guardar en Firebase:", error);

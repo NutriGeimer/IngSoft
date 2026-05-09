@@ -1,0 +1,19 @@
+{
+  "hosting": {
+    "site": "beeparking-ug",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      ".git/**",
+      ".gitignore",
+      "node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/login.html"
+      }
+    ]
+  }
+}

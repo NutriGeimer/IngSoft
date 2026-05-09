@@ -167,7 +167,7 @@ body {
 
 .parking-page {
   padding: 2rem 1rem 3rem;
-  max-width: 1600px;
+  min-width: 90%;
   margin: 0 auto;
 }
 

@@ -48,8 +48,6 @@ const generateQR = async () => {
     const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
     const url = `${base}access.html?token=${token}`;
 
-    const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-
     try {
         await setDoc(doc(db, "tokens_acceso", token), {
             active: true,
@@ -66,13 +64,6 @@ const generateQR = async () => {
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H
         });
-
-        if (isLocalhost) {
-            const warn = document.createElement('p');
-            warn.className = 'text-amber-600 text-xs text-center mt-3 px-2';
-            warn.textContent = '⚠️ Estás en localhost — el celular no puede acceder. Abre la app desde la IP de tu compu (ej. http://192.168.x.x:5500).';
-            qrContainer.after(warn);
-        }
     } catch (error) {
         console.error("Error al guardar en Firebase:", error);
         qrContainer.innerHTML = '<p class="text-red-500 text-sm text-center">Error al generar código</p>';

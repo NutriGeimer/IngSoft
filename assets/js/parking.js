@@ -100,6 +100,7 @@ function renderMap() {
       ? spot.occupiedByUid === firebaseUser?.uid ? 'Ocupado por ti' : 'Ocupado'
       : 'Libre';
 
+    slot.dataset.spotId = spot.id;
     slot.setAttribute('aria-pressed', spot.id === selectedSpotId ? 'true' : 'false');
     slot.innerHTML = `
       <span class="slot-number">Cajón ${spot.id}</span>
@@ -255,3 +256,20 @@ async function occupySelectedSpot() {
   resetButton.addEventListener('click', resetSpots);
   leaveButton.addEventListener('click', leaveSelectedSpot);
   clearSelectionButton.addEventListener('click', clearSelection);
+
+// Auto-seleccionar cajón cuando se llega desde un QR
+const urlParams = new URLSearchParams(window.location.search);
+const qrSpot = parseInt(urlParams.get('spot'), 10);
+if (qrSpot >= 1 && qrSpot <= TOTAL_SPOTS) {
+  selectedSpotId = qrSpot;
+
+  const banner     = document.getElementById('qrBanner');
+  const bannerText = document.getElementById('qrBannerText');
+  bannerText.textContent = `Tu cajón asignado: #${qrSpot}`;
+  banner.style.display = 'flex';
+
+  setTimeout(() => {
+    const target = parkingMap.querySelector(`[data-spot-id="${qrSpot}"]`);
+    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 1800);
+}

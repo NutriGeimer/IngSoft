@@ -43,6 +43,22 @@
             <p class="max-w-2xl text-slate-600">Bienvenido. Selecciona tu cajón de estacionamiento y controla tu acceso desde aquí.</p>
           </div>
 
+          <!-- Banner visible solo cuando se llega desde un QR -->
+          <div id="qrBanner" class="hidden mb-4" style="
+            background: #fffbea;
+            border: 1.5px solid #f59e0b;
+            border-radius: 0.75rem;
+            padding: 0.85rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            color: #92400e;
+          ">
+            <span style="font-size:1.4rem;">&#x1F17F;&#xFE0F;</span>
+            <span id="qrBannerText">Tu cajón asignado:</span>
+          </div>
+
           <div class="mb-4 flex flex-wrap gap-3">
             <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800">Libre</span>
             <span class="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-800">Ocupado</span>

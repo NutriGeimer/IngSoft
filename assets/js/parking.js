@@ -257,19 +257,3 @@ async function occupySelectedSpot() {
   leaveButton.addEventListener('click', leaveSelectedSpot);
   clearSelectionButton.addEventListener('click', clearSelection);
 
-// Auto-seleccionar cajón cuando se llega desde un QR
-const urlParams = new URLSearchParams(window.location.search);
-const qrSpot = parseInt(urlParams.get('spot'), 10);
-if (qrSpot >= 1 && qrSpot <= TOTAL_SPOTS) {
-  selectedSpotId = qrSpot;
-
-  const banner     = document.getElementById('qrBanner');
-  const bannerText = document.getElementById('qrBannerText');
-  bannerText.textContent = `Tu cajón asignado: #${qrSpot}`;
-  banner.classList.remove('hidden');
-
-  setTimeout(() => {
-    const target = parkingMap.querySelector(`[data-spot-id="${qrSpot}"]`);
-    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, 1800);
-}

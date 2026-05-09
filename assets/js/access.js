@@ -4,7 +4,6 @@ import { doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com
 const stateLoading = document.getElementById('stateLoading');
 const stateSuccess = document.getElementById('stateSuccess');
 const stateError   = document.getElementById('stateError');
-const spotNumber   = document.getElementById('spotNumber');
 const errorMsg     = document.getElementById('errorMsg');
 
 const showState = (state) => {
@@ -32,16 +31,13 @@ const validate = async () => {
             return;
         }
 
-        const { spot } = snap.data();
-
         await updateDoc(tokenRef, { active: false, usedAt: serverTimestamp() });
 
-        spotNumber.textContent = spot;
         showState(stateSuccess);
 
         setTimeout(() => {
             const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-            window.location.href = `${base}parking.html?spot=${spot}`;
+            window.location.href = `${base}parking.html`;
         }, 1800);
 
     } catch (error) {

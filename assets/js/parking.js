@@ -266,7 +266,7 @@ if (qrSpot >= 1 && qrSpot <= TOTAL_SPOTS) {
   const banner     = document.getElementById('qrBanner');
   const bannerText = document.getElementById('qrBannerText');
   bannerText.textContent = `Tu cajón asignado: #${qrSpot}`;
-  banner.style.display = 'flex';
+  banner.classList.remove('hidden');
 
   setTimeout(() => {
     const target = parkingMap.querySelector(`[data-spot-id="${qrSpot}"]`);

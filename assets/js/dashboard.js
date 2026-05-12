@@ -1,5 +1,5 @@
 import { db } from "./firebase-config.js";
-import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { doc, setDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
 const openModal    = document.getElementById('openModal');
 const closeModal   = document.getElementById('closeModal');
@@ -19,7 +19,7 @@ const hideModal = () => {
 const generateQR = async () => {
     const token = Math.random().toString(36).substring(2, 15);
     const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-    const url = `${base}access.html?token=${token}`;
+    const url = `${base}validate.html?token=${token}`;
 
     try {
         await setDoc(doc(db, "tokens_acceso", token), {
@@ -35,6 +35,13 @@ const generateQR = async () => {
             colorDark: "#000000",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // Escuchar cuando el token se use
+        onSnapshot(doc(db, "tokens_acceso", token), (docSnap) => {
+            if (docSnap.exists() && docSnap.data().usedAt) {
+                window.location.href = 'parking.html';
+            }
         });
     } catch (error) {
         console.error("Error al guardar en Firebase:", error);

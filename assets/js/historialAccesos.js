@@ -7,7 +7,6 @@ import {
     orderBy,
     where,
     serverTimestamp,
-    Timestamp,
 } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
@@ -15,7 +14,6 @@ import { getCurrentUserProfile, logoutUser } from "./auth.js";
 
 const COLLECTION = "accessHistory";
 
-// guardar un acceso en FIRESTORE
 export async function logAccess({ uid, userName, spotId, action}) {
     try {
         await addDoc(collection(db, COLLECTION), {
@@ -30,7 +28,6 @@ export async function logAccess({ uid, userName, spotId, action}) {
     }
 }
 
-// obtiene accesos del usuario logueado
 export async function getUserAccessHistory(uid) {
     const q = query(
         collection(db, COLLECTION),
@@ -41,7 +38,6 @@ export async function getUserAccessHistory(uid) {
     return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 
-// formatear timestamp a espanol (mexico)
 export function formatTimestamp(timestamp) {
     if (!timestamp) return "-";
     const date = timestamp.toDate();
@@ -55,7 +51,6 @@ export function formatTimestamp(timestamp) {
     });
 }
 
-
 if (document.getElementById("historyTableBody")) {
     let currentUser = null;
     let allRecords = [];
@@ -63,7 +58,6 @@ if (document.getElementById("historyTableBody")) {
     const tableBody = document.getElementById("historyTableBody");
     const userNameLabel = document.getElementById("userNameLabel");
     const logoutBtn = document.getElementById("logoutBtn");
-    const searchInput = document.getElementById("searchInput");
     const filterAction = document.getElementById("filterAction");
     const filterDate = document.getElementById("filterDate");
     const loadingState = document.getElementById("loadingState");
@@ -75,7 +69,6 @@ if (document.getElementById("historyTableBody")) {
     onAuthStateChanged(auth, async (user) => {
         currentUser = user;
         if (!user) {
-            // si no hay sesión, redirigir al login
             window.location.href = "login.html";
             return;
         }
@@ -96,7 +89,6 @@ if (document.getElementById("historyTableBody")) {
     async function loadHistory(uid) {
        showLoading(true);
        try {
-        // carga los registros del usuario actual 
         allRecords = await getUserAccessHistory(uid);
         renderTable(allRecords);
         updateStats(allRecords);
@@ -121,20 +113,17 @@ if (document.getElementById("historyTableBody")) {
             const isEntry = record.action === "entrada";
             const row = document.createElement("tr");
             row.className = "border-b border-slate-100 hover:bg-amber-50/40 transition-colors";
+            
             row.innerHTML = `
                 <td class="px-6 py-4">
-                  <div class="h-9 w-9 rounded-lg flex items-center justify-center
-                              ${isEntry ? "bg-green-100" : "bg-slate-100"}">
-                    <span class="material-symbols-outlined text-sm
-                                 ${isEntry ? "text-green-700" : "text-slate-500"}">
+                  <div class="h-9 w-9 rounded-lg flex items-center justify-center ${isEntry ? "bg-green-100" : "bg-slate-100"}">
+                    <span class="material-symbols-outlined text-sm ${isEntry ? "text-green-700" : "text-slate-500"}">
                       ${isEntry ? "login" : "logout"}
                     </span>
                   </div>
                 </td>
                 <td class="px-6 py-4">
-                  <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full
-                               text-[11px] font-bold uppercase tracking-wider
-                               ${isEntry ? "bg-green-100 text-green-800" : "bg-slate-800 text-white"}">
+                  <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${isEntry ? "bg-green-100 text-green-800" : "bg-slate-800 text-white"}">
                     ${isEntry ? "Entrada" : "Salida"}
                   </span>
                 </td>
@@ -144,10 +133,10 @@ if (document.getElementById("historyTableBody")) {
                 <td class="px-6 py-4 text-secondary text-sm">
                   ${formatTimestamp(record.timestamp)}
                 </td>
-              `;
-              tableBody.appendChild(row);
-            });
-          }
+            `;
+            tableBody.appendChild(row);
+        });
+    }
 
     function updateStats(records) {
         const entries = records.filter((r) => r.action === "entrada").length;
@@ -196,5 +185,4 @@ if (document.getElementById("historyTableBody")) {
     document.getElementById("refreshBtn")?.addEventListener("click", () => {
         location.reload();
     });
-
 }

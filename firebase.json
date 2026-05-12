@@ -9,10 +9,35 @@
       ".gitignore",
       "node_modules/**"
     ],
+    "cleanUrls": true,
     "rewrites": [
       {
-        "source": "**",
+        "source": "/login",
         "destination": "/login.html"
+      },
+      {
+        "source": "/register",
+        "destination": "/register.html"
+      },
+      {
+        "source": "/dashboard",
+        "destination": "/dashboard.html"
+      },
+      {
+        "source": "/parking",
+        "destination": "/parking.html"
+      },
+      {
+        "source": "/access",
+        "destination": "/access.html"
+      },
+      {
+        "source": "/validate",
+        "destination": "/validate.html"
+      },
+      {
+        "source": "/historialAccesos",
+        "destination": "/historialAccesos.html"
       }
     ]
   }

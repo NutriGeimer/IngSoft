@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeeParking - Validación de Salida</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons para que se vea más pro -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 text-center border-t-8 border-yellow-400">
+        <!-- Icono Dinámico -->
+        <div id="status-icon" class="mb-6 flex justify-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-yellow-500"></div>
+        </div>
+
+        <h1 id="status-title" class="text-2xl font-bold text-slate-800 mb-2">Validando QR</h1>
+        <p id="status-message" class="text-slate-500 mb-8">Por favor, espera un momento mientras verificamos tu salida...</p>
+
+        <!-- Simulación de la barrera/plumilla (Visual) -->
+        <div id="barrier-visual" class="hidden">
+            <div class="w-full h-4 bg-slate-200 rounded-full overflow-hidden relative">
+                <div id="barrier-arm" class="absolute h-full w-full bg-yellow-400 transition-all duration-1000 ease-in-out origin-left"></div>
+            </div>
+            <p class="text-xs text-slate-400 mt-2 uppercase tracking-widest font-semibold">Simulación de Plumilla</p>
+        </div>
+    </div>
+    <script type="module" src="./assets/js/salida.js"></script>
+</body>
+</html>

@@ -4,6 +4,9 @@ import { collection, doc, getDocs, query, orderBy, setDoc, updateDoc, serverTime
 import { getCurrentUserProfile, logoutUser } from "./auth.js";
 import { logAccess } from "./historialAccesos.js";
 
+const userNameLabel = document.getElementById('userNameLabel');
+const logoutBtn = document.getElementById('logoutBtn');
+
 const TOTAL_SPOTS = 50;
 const SPOTS_COLLECTION = "parkingSpots";
 
@@ -12,12 +15,16 @@ const currentUserInfo = document.getElementById('currentUserInfo');
 const selectedSpotInfo = document.getElementById('selectedSpotInfo');
 const occupyButton = document.getElementById('occupyButton');
 const resetButton = document.getElementById('resetButton');
-const leaveButton = document.getElementById('leaveButton');
 const clearSelectionButton = document.getElementById('clearSelectionButton');
 const totalFree = document.getElementById('totalFree');
 const totalOccupied = document.getElementById('totalOccupied');
-const userNameLabel = document.getElementById('userNameLabel');
-const logoutBtn = document.getElementById('logoutBtn');
+
+//Variables para QR de salida
+const leaveButton = document.getElementById('leaveButton');
+const closeModal = document.getElementById('closeModal');
+const cancelBtn = document.getElementById('cancelBtn');
+const modalQrSalida = document.getElementById('modalQrSalida');
+const qrContainer = document.getElementById("qrcode");
 
 let spots = [];
 let selectedSpotId = null;
@@ -206,6 +213,7 @@ async function occupySelectedSpot() {
     action: "entrada",
   });
 }
+/*
   //liberar cajon + registrar salida
   async function leaveSelectedSpot() {
     const currentUserSpot = getCurrentUserSpot();
@@ -231,7 +239,58 @@ async function occupySelectedSpot() {
       action: "salida",
     });
   }
+*/
 
+//Generar QR
+const handleleaveButton = async () => {
+    //revisar la variable local
+    if (!firebaseUser) {
+        alert("Esperando autentificación...");
+        return;
+    }
+    
+    qrContainer.innerHTML = ""; //borra cualquier QR que se haya generado antes
+    modalQrSalida.classList.remove('hidden'); // de todas las clases del contenedor modelOverlay remover el hidden
+
+    //generar token único
+    const token = Math.random().toString(36).substring(2, 15);
+    const url = `${window.location.origin}${window.location.pathname.replace('parking.html', 'salida.html')}?token=${token}`;
+    
+    //guardarlo en firebase
+    try{
+      await setDoc(doc(db, "tokens_salida", token),{
+        active: true,
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        createdAt: serverTimestamp(),
+        url: url
+      });
+
+      //generar QR
+      new QRCode(qrContainer, {
+        text: url,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H //condigura el QR para que se vea bien
+      });
+
+      console.log("QR generado para:", firebaseUser.email);
+
+      setTimeout(() => {
+            window.location.href = url; 
+        }, 3000); 
+      
+      
+      console.log("QR generado y registrado en DB");
+
+    } catch (error){
+       console.error("Error al guardar en Firebase:", error);
+       qrContainer.innerHTML = "Error al generar código";
+    }
+    
+};
   async function resetSpots() {
   if (!confirm('¿Deseas reiniciar todos los estados y dejar los 50 lugares libres?')) return;
   const batch = writeBatch(db);
@@ -252,8 +311,14 @@ async function occupySelectedSpot() {
   renderMap();
   }
 
-  occupyButton.addEventListener('click', occupySelectedSpot);
-  resetButton.addEventListener('click', resetSpots);
-  leaveButton.addEventListener('click', leaveSelectedSpot);
-  clearSelectionButton.addEventListener('click', clearSelection);
+  const hideModal = () => modalQrSalida.classList.add('hidden');
+
+leaveButton?.addEventListener('click', handleleaveButton);
+closeModal?.addEventListener('click', hideModal);
+cancelBtn?.addEventListener('click', hideModal);
+occupyButton.addEventListener('click', occupySelectedSpot);
+  
+resetButton.addEventListener('click', resetSpots);
+//leaveButton.addEventListener('click', leaveSelectedSpot);
+clearSelectionButton.addEventListener('click', clearSelection);
 

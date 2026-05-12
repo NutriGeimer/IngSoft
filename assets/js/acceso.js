@@ -41,7 +41,7 @@ function mostrarExito() {
     statusIcon.innerHTML = '<i data-lucide="check-circle" class="text-green-500 w-16 h-16"></i>';
     statusTitle.innerText = "¡Acceso Concedido!";
     statusTitle.classList.add("text-green-600");
-    statusMessage.innerText = "Levantando plumilla. Bienvenido a BeeParking.";
+    statusMessage.innerText = "Código QR validado exitosamente. Regresa a la PC para continuar con la selección de cajón.";
     barrierVisual.classList.remove('hidden');
 
     setTimeout(() => {
@@ -49,10 +49,11 @@ function mostrarExito() {
         lucide.createIcons();
     }, 100);
 
-    setTimeout(() => {
-        const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-        window.location.href = `${base}parking.html`;
-    }, 3500);
+    // Quitar la redirección automática
+    // setTimeout(() => {
+    //     const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+    //     window.location.href = `${base}parking.html`;
+    // }, 3500);
 
     lucide.createIcons();
 }

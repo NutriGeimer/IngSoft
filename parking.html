@@ -21,13 +21,14 @@
     <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
       <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <div class="flex items-center gap-4">
+          <span class="material-symbols-outlined text-primary-container" style='font-variation-settings: "FILL" 1;'>local_parking</span>
           <span class="text-xl font-black tracking-tighter text-slate-900">BeeParking</span>
         </div>
         <div class="flex items-center gap-6">
           <div class="hidden md:flex items-center gap-8 mr-4">
             <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="dashboard.html">Dashboard</a>
-            <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="historialAccesos.html">Historial</a>
-            <a class="text-amber-600 font-bold border-b-2 border-amber-500" href="parking.html">Parking</a>
+            <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="historialAccesos.html">Historial de Accesos</a>
+            <a class="text-amber-600 font-bold border-b-2 border-amber-500" href="parking.html">Mapa de Estacionamiento</a>
           </div>
           <a id="userNameLabel" class="text-sm font-semibold text-slate-600" href="profile.html"></a>
           <button id="logoutBtn" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">Cerrar sesión</button>
@@ -105,10 +106,32 @@
             <button id="occupyButton" class="btn btn-primary" type="button" disabled>Marcar como ocupado</button>
             <button id="leaveButton" class="btn btn-outline-primary" type="button" disabled>Retirar mi cajón</button>
             <button id="clearSelectionButton" class="btn btn-secondary" type="button">Deseleccionar</button>
+
+            <!-- Estructura del Modal para el QR-->
+            <div id="modalQrSalida" class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            
+            <!-- Caja del Modal -->
+            <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
+                
+                <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+                <h3 class="text-xl font-bold text-gray-800">Código QR</h3>
+                <button id="closeModal" class="text-gray-500 hover:text-red-500 transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+                </div>
+
+                 <!--Contenedor del QR-->
+                <div id="qrcode" class="flex justify-center items-center min-h-[200px] bg-white p-2 rounded-lg"></div>
+                <div class="p-4 border-t bg-gray-50 flex justify-end gap-3"></div>
+                
+            </div>
+            </div>
           </div>
         </aside>
       </div>
     </main>
+    <!--Librería para el QR-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <script type="module" src="assets/js/parking.js"></script>
   </body>

@@ -175,7 +175,7 @@ async function occupySelectedSpot() {
 
   if (!selectedSpot || selectedSpot.occupiedBy !== null) return;
   if (currentUserSpot) {
-    alert(`Ya tienes el cajón ${currentUserSpot.id} ocupado. Libéralo antes de ocupar otro.`);
+    alert(`Ya tienes el cajon ${currentUserSpot.id} ocupado. Liberalo antes de ocupar otro`);
     return;
   }
 
@@ -212,6 +212,13 @@ async function leaveSelectedSpot() {
     updatedAt: serverTimestamp(),
   });
   renderMap();
+
+  await logAccess({
+    uid: firebaseUser?.uid || "anonimo",
+    userName: userName,
+    spotId: spotId,
+    action: "salida",
+  });
 }
 
 async function resetSpots() {
@@ -235,6 +242,6 @@ function clearSelection() {
 }
 
 occupyButton.addEventListener('click', occupySelectedSpot);
-resetButton.addEventListener('click', resetSpots); 
+resetButton.addEventListener('click', resetSpots);
 leaveButton.addEventListener('click', leaveSelectedSpot);
 clearSelectionButton.addEventListener('click', clearSelection);

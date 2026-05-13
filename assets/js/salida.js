@@ -14,7 +14,6 @@ import {
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
 import { getCurrentUserProfile } from "./auth.js";
 import { logAccess } from "./historialAccesos.js";
-import { act } from "react";
 
 const SPOTS_COLLECTION = "parkingSpots";
 
@@ -38,7 +37,7 @@ if (document.getElementById("exitQrModal")) {
         exitQrContainer.innerHTML = "";
         exitQrModal.classList.remove("hidden");
 
-        const token = "salida_" + matchMedia.random().toString(36).substring(2, 15);
+        const token = "salida_" + Math.random().toString(36).substring(2, 15);
         const base = window.location.href.substring(
             0, window.location.href.lastIndexOf("/") +1
         );
@@ -114,10 +113,10 @@ if (document.getElementById("salidaStatus")) {
                 where("occupiedByUid", "==", uid)
             );
             const spotsSnap = await getDocs(spotsQuery);
-            
+            let spotId = null;
+
             if(!spotsSnap.empty) {
                 const batch = writeBatch(db);
-                let spotId = null;
 
                 spotsSnap.forEach((spotDoc) => {
                     spotId = spotDoc.data().id;
@@ -134,7 +133,7 @@ if (document.getElementById("salidaStatus")) {
                     uid, 
                     userName,
                     spotId,
-                    action: "salida";
+                    action: "salida",
                 });
             }
             
@@ -171,4 +170,9 @@ if (document.getElementById("salidaStatus")) {
             statusMessage.textContent = mensaje;
     }
     validarSalida();
+}
+
+export function setExitBtnState(hasSpot) {
+    const exitQrBtn = document.getElementById("exitQrBtn");
+    if (exitQrBtn) exitQrBtn.disabled = !hasSpot;
 }

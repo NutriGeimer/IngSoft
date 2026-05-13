@@ -1,10 +1,6 @@
-import { db, auth } from "./firebase-config.js";
+import { auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-import { collection, doc, getDocs, query, orderBy, setDoc, updateDoc, serverTimestamp, writeBatch, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
-import { getCurrentUserProfile, logoutUser } from "./auth.js";
-import { logAccess } from "./historialAccesos.js";
-import { hideAlert, showAlert, setButtonLoading, registerUser, getFirebaseErrorMessage } from "./auth.js"
-
+import { getCurrentUserProfile, logoutUser, updateCurrentUserProfile } from "./auth.js";
 
 // Elementos del formulario y modal
 const editProfileForm = document.getElementById('editProfileForm');
@@ -28,12 +24,7 @@ const userNameLabel = document.getElementById('userNameLabel'); // ID original d
 const profileAvatar = document.getElementById('profileAvatar');
 const logoutBtn = document.getElementById('logoutBtn');
 
-// Datos simulados (puedes conectarlos a tu auth.js más adelante)
-let userSession = {
-    name: "Andres Manuel Lopez",
-    email: "ejemplo@correo.com",
-    plates: "GTF235F"
-};
+let currentUser = null;
 
 /**
  * Actualiza todos los elementos de la interfaz con los datos del usuario
@@ -58,9 +49,23 @@ function updateUI(user) {
     if (editPlates) editPlates.value = user.plates || "";
 }
 
-// Inicializar vista al cargar
-document.addEventListener('DOMContentLoaded', () => {
-    updateUI(userSession);
+async function loadUserProfile(user) {
+    currentUser = user;
+    const profile = await getCurrentUserProfile(user.uid);
+    const profileData = {
+        name: profile?.name || user.displayName || user.email?.split('@')[0] || "Usuario",
+        email: user.email || profile?.email || "Sin email",
+        plates: profile?.nplates || profile?.plates || ""
+    };
+    updateUI(profileData);
+}
+
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
+    await loadUserProfile(user);
 });
 
 // Guardar cambios del perfil
@@ -73,22 +78,23 @@ editProfileForm?.addEventListener('submit', async (e) => {
     editProfileBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Guardando...';
 
     try {
-        // Simulación de guardado (reemplazar con Firebase/API)
-        await new Promise(resolve => setTimeout(resolve, 600));
+        if (!currentUser) throw new Error('Usuario no autenticado');
 
-        // Actualizar objeto local
-        userSession.name = editName.value;
-        userSession.plates = editPlates.value;
+        await updateCurrentUserProfile(currentUser.uid, {
+            name: editName.value,
+            nplates: editPlates.value
+        });
 
-        // Refrescar UI
-        updateUI(userSession);
+        updateUI({
+            name: editName.value,
+            email: editEmail.value,
+            plates: editPlates.value
+        });
 
-        // Cerrar modal
         if (editProfileModal) editProfileModal.hide();
-        
     } catch (error) {
         console.error("Error al guardar:", error);
-        alert("No se pudieron guardar los cambios.");
+        alert(error?.message || "No se pudieron guardar los cambios.");
     } finally {
         editProfileBtn.disabled = false;
         editProfileBtn.innerHTML = originalText;
@@ -96,7 +102,7 @@ editProfileForm?.addEventListener('submit', async (e) => {
 });
 
 // Cerrar sesión
-logoutBtn?.addEventListener('click', () => {
-    // Aquí podrías llamar a signout de Firebase
+logoutBtn?.addEventListener('click', async () => {
+    await logoutUser();
     window.location.href = './login.html';
 });

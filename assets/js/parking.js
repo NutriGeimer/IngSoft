@@ -240,16 +240,42 @@ const handleleaveButton = async () => {
 
     //generar token único
     const token = Math.random().toString(36).substring(2, 15);
-    const url = `${window.location.origin}${window.location.pathname.replace('parking.html', 'salida.html')}?token=${token}`;
+    const url = `${window.location.origin}/salida.html?token=${token}`;
     
     //guardarlo en firebase
-    try{
-      await setDoc(doc(db, "tokens_salida", token),{
+    try {
+      if (typeof QRCode === 'undefined') {
+        throw new Error('La librería de QR no está cargada');
+      }
+
+      const currentUserSpot = getCurrentUserSpot();
+      if (!currentUserSpot) {
+        throw new Error('No hay un cajón ocupado por el usuario para generar la salida.');
+      }
+
+      const firestore = await import("https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js");
+      if (typeof firestore.setDoc !== 'function') {
+        throw new Error('No se pudo cargar la función setDoc de Firestore.');
+      }
+
+      const tokenRef = doc(db, "tokens_salida", token);
+      await firestore.setDoc(tokenRef, {
         active: true,
         uid: firebaseUser.uid,
         email: firebaseUser.email,
         createdAt: serverTimestamp(),
         url: url
+      });
+
+      // Escuchar si el token se utiliza para salir
+      const unsubscribeToken = onSnapshot(tokenRef, (tokenSnap) => {
+        if (tokenSnap.exists() && tokenSnap.data().active === false) {
+          qrContainer.innerHTML = '<p class="text-green-600 text-sm text-center">Salida completada. Redirigiendo a dashboard...</p>';
+          unsubscribeToken();
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 900);
+        }
       });
 
       //generar QR
@@ -259,21 +285,15 @@ const handleleaveButton = async () => {
         height: 200,
         colorDark: "#000000",
         colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H //condigura el QR para que se vea bien
+        correctLevel: QRCode.CorrectLevel.H //configura el QR para que se vea bien
       });
 
       console.log("QR generado para:", firebaseUser.email);
-
-      setTimeout(() => {
-            window.location.href = url; 
-        }, 3000); 
-      
-      
       console.log("QR generado y registrado en DB");
 
-    } catch (error){
-       console.error("Error al guardar en Firebase:", error);
-       qrContainer.innerHTML = "Error al generar código";
+    } catch (error) {
+       console.error("Error al generar QR de salida:", error);
+       qrContainer.innerHTML = `<p class="text-red-500 text-sm text-center">Error al generar código: ${error.message}</p>`;
     }
     
 };
@@ -303,12 +323,5 @@ leaveButton?.addEventListener('click', handleleaveButton);
 closeModal?.addEventListener('click', hideModal);
 cancelBtn?.addEventListener('click', hideModal);
 occupyButton.addEventListener('click', occupySelectedSpot);
-  
 resetButton.addEventListener('click', resetSpots);
-//leaveButton.addEventListener('click', leaveSelectedSpot);
-clearSelectionButton.addEventListener('click', clearSelection);
-
-occupyButton.addEventListener('click', occupySelectedSpot);
-resetButton.addEventListener('click', resetSpots); 
-leaveButton.addEventListener('click', leaveSelectedSpot);
 clearSelectionButton.addEventListener('click', clearSelection);

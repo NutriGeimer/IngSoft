@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BeeParking | Validación de Salida</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    body { background-color: #f9f9f9; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+  <div id="salidaStatus"
+       class="max-w-md w-full bg-white rounded-3xl shadow-xl p-8 text-center border-t-8 border-amber-400">
+
+    <!-- Logo -->
+    <div class="mb-6">
+      <span class="text-2xl font-black tracking-tighter text-slate-900">BeeParking</span>
+    </div>
+
+    <!-- Ícono de estado -->
+    <div id="status-icon" class="mb-6 flex justify-center">
+      <!-- Spinner de carga inicial -->
+      <div class="animate-spin rounded-full h-16 w-16 border-4 border-amber-200 border-t-amber-500"></div>
+    </div>
+
+    <h1 id="status-title" class="text-2xl font-bold text-slate-800 mb-2">
+      Validando Salida...
+    </h1>
+    <p id="status-message" class="text-slate-500 mb-8">
+      Por favor espera un momento mientras procesamos tu salida.
+    </p>
+
+    <!-- Barra de progreso -->
+    <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+      <div id="progressBar"
+           class="h-full bg-amber-400 rounded-full transition-all duration-[2000ms] ease-in-out"
+           style="width: 0%"></div>
+    </div>
+    <p class="text-xs text-slate-400 mt-2 uppercase tracking-widest font-semibold">
+      Procesando...
+    </p>
+
+  </div>
+
+  <script type="module" src="./assets/js/salida.js"></script>
+  <script>
+    // Animar barra de progreso
+    setTimeout(() => {
+      document.getElementById('progressBar').style.width = '100%';
+    }, 100);
+  </script>
+</body>
+</html>

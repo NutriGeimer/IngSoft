@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeeParking | Perfil</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#785900",
+              "on-surface": "#1a1c1c",
+            }
+          }
+        }
+      }
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        body { background-color: #f9f9f9; font-family: 'Inter', sans-serif; }
+        .profile-header { background-color: #ffc107; height: 120px; border-radius: 0.5rem 0.5rem 0 0; }
+        .profile-avatar { width: 100px; height: 100px; border: 4px solid white; margin-top: -50px; background-color: white; }
+        /* Evitar que Tailwind interfiera con los modales de Bootstrap */
+        .modal-backdrop { z-index: 1040 !important; }
+        .modal { z-index: 1050 !important; }
+    </style>
+</head>
+
+<body class="text-on-surface">
+
+    <header class="sticky top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm antialiased">
+        <div class="flex items-center gap-4">
+            <span class="text-xl font-black tracking-tighter text-slate-900 dark:text-white">BeeParking</span>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="hidden md:flex items-center gap-8 mr-4">
+                <a class="text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors no-underline" href="dashboard.html">Dashboard</a>
+                <a class="text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors no-underline" href="historialAccesos.html">Access History</a>
+                <a class="text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors no-underline" href="parking.html">Parking Map</a>
+            </div>
+            <span id="userNameLabel" class="text-amber-600 dark:text-amber-400 font-bold border-b-2 border-amber-500 no-underline"></span>
+            <button id="logoutBtn" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">Cerrar sesión</button>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="profile-header"></div>
+                    <div class="card-body text-center pb-4">
+                        <img src="https://ui-avatars.com/api/?name=Usuario&background=ffc107&color=000&size=100" alt="Avatar" class="profile-avatar rounded-circle shadow-sm mb-3" id="profileAvatar">
+                        
+                        <h2 class="h4 fw-bold mb-1" id="displayName">Cargando...</h2>
+                        <p class="text-secondary mb-4" id="displayEmail">cargando@email.com</p>
+                        
+                        <hr class="w-75 mx-auto text-muted">
+                        
+                        <div class="row text-start mt-4 mb-4 px-4">
+                            <div class="col-12 mb-3">
+                                <p class="text-uppercase text-muted small fw-bold mb-1">Placas Vehiculares</p>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-car-front-fill text-warning fs-5 me-2"></i>
+                                    <span class="fs-5 fw-medium text-dark" id="displayPlates">Sin registrar</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-warning px-4 rounded-pill fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                            <i class="bi bi-pencil-square me-2"></i>Editar Perfil
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light border-0">
+                    <h5 class="modal-title fw-bold">Editar Información</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="editProfileForm">
+                        <div class="mb-3 text-start">
+                            <label for="editName" class="form-label fw-semibold text-secondary small">NOMBRE COMPLETO</label>
+                            <input type="text" class="form-control form-control-lg" id="editName" required>
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label for="editEmail" class="form-label fw-semibold text-secondary small">DIRECCIÓN DE EMAIL</label>
+                            <input type="email" class="form-control form-control-lg" id="editEmail" readonly disabled>
+                        </div>
+                        <div class="mb-4 text-start">
+                            <label for="editPlates" class="form-label fw-semibold text-secondary small">PLACAS VEHICULARES</label>
+                            <input type="text" class="form-control form-control-lg" id="editPlates">
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" id="editProfileBtn" class="btn btn-success btn-lg fw-bold">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="./assets/js/profile.js"></script>
+</body>
+</html>

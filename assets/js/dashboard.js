@@ -1,10 +1,37 @@
 import { db } from "./firebase-config.js";
-import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { doc, setDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+
+import { getAuth, onAuthStateChanged } from  "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
+import { getCurrentUserProfile, logoutUser } from "./auth.js";
+
+const auth = getAuth();
+let currentUser = null;
+
+const userNameLabel = document.getElementById('userNameLabel');
+const logoutBtn = document.getElementById('logoutBtn');
 
 const openModal    = document.getElementById('openModal');
 const closeModal   = document.getElementById('closeModal');
 const modalOverlay = document.getElementById('modalOverlay');
 const qrContainer  = document.getElementById('qrcode');
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+  //guardar usuario actual
+  currentUser = user;
+
+  const profile = await getCurrentUserProfile(user.uid);
+  const userName = profile?.name || user.email || "Usuario";
+  if (userNameLabel) userNameLabel.textContent = userName;
+});
+
+logoutBtn?.addEventListener('click', async () => {
+  await logoutUser();
+  window.location.href = 'login.html';
+});
 
 const showModal = () => {
     qrContainer.innerHTML = '';
@@ -19,7 +46,7 @@ const hideModal = () => {
 const generateQR = async () => {
     const token = Math.random().toString(36).substring(2, 15);
     const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-    const url = `${base}access.html?token=${token}`;
+    const url = `${base}validate.html?token=${token}`;
 
     try {
         await setDoc(doc(db, "tokens_acceso", token), {
@@ -35,6 +62,13 @@ const generateQR = async () => {
             colorDark: "#000000",
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // Escuchar cuando el token se use
+        onSnapshot(doc(db, "tokens_acceso", token), (docSnap) => {
+            if (docSnap.exists() && docSnap.data().usedAt) {
+                window.location.href = 'parking.html';
+            }
         });
     } catch (error) {
         console.error("Error al guardar en Firebase:", error);

@@ -1,8 +1,11 @@
 ﻿import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-import { collection, doc, getDocs, query, orderBy, updateDoc, serverTimestamp, writeBatch, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { collection, doc, getDocs, query, orderBy, updateDoc, serverTimestamp, writeBatch, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 import { getCurrentUserProfile, logoutUser } from "./auth.js";
 import { logAccess } from "./historialAccesos.js";
+
+const userNameLabel = document.getElementById('userNameLabel');
+const logoutBtn = document.getElementById('logoutBtn');
 
 const TOTAL_SPOTS = 50;
 const SPOTS_COLLECTION = "parkingSpots";
@@ -12,16 +15,20 @@ const currentUserInfo = document.getElementById('currentUserInfo');
 const selectedSpotInfo = document.getElementById('selectedSpotInfo');
 const occupyButton = document.getElementById('occupyButton');
 const resetButton = document.getElementById('resetButton');
-const leaveButton = document.getElementById('leaveButton');
 const clearSelectionButton = document.getElementById('clearSelectionButton');
 const totalFree = document.getElementById('totalFree');
 const totalOccupied = document.getElementById('totalOccupied');
-const userNameLabel = document.getElementById('userNameLabel');
-const logoutBtn = document.getElementById('logoutBtn');
+
+// Variables para QR de salida
+const leaveButton = document.getElementById('leaveButton');
+const closeModal = document.getElementById('closeModal');
+const cancelBtn = document.getElementById('cancelBtn');
+const modalQrSalida = document.getElementById('modalQrSalida');
+const qrContainer = document.getElementById("qrcode");
 
 let spots = [];
 let selectedSpotId = null;
-let firebaseUser = null; 
+let firebaseUser = null;
 let userName = "Usuario";
 
 onAuthStateChanged(auth, async (user) => {
@@ -99,7 +106,7 @@ function renderMap() {
 
     slot.dataset.spotId = spot.id;
     slot.setAttribute('aria-pressed', spot.id === selectedSpotId ? 'true' : 'false');
-    
+
     slot.innerHTML = `
       <span class="slot-number">Cajón ${spot.id}</span>
       <span class="slot-status">${statusLabel}</span>
@@ -121,7 +128,6 @@ function updateSummary() {
   totalOccupied.textContent = occupiedCount;
 
   const fill = document.getElementById('occupancyFill');
-
   if (fill) {
     const percent = (occupiedCount / TOTAL_SPOTS) * 100;
     fill.style.width = Math.round(percent) + '%';
@@ -175,7 +181,7 @@ async function occupySelectedSpot() {
 
   if (!selectedSpot || selectedSpot.occupiedBy !== null) return;
   if (currentUserSpot) {
-    alert(`Ya tienes el cajon ${currentUserSpot.id} ocupado. Liberalo antes de ocupar otro`);
+    alert(`Ya tienes el cajón ${currentUserSpot.id} ocupado. Libéralo antes de ocupar otro`);
     return;
   }
 
@@ -197,6 +203,7 @@ async function occupySelectedSpot() {
   });
 }
 
+// Liberar cajón + registrar salida en Firestore
 async function leaveSelectedSpot() {
   const currentUserSpot = getCurrentUserSpot();
   if (!currentUserSpot) return;
@@ -206,6 +213,7 @@ async function leaveSelectedSpot() {
   currentUserSpot.occupiedByUid = null;
 
   if (selectedSpotId === spotId) selectedSpotId = null;
+
   await updateDoc(doc(db, SPOTS_COLLECTION, String(spotId)), {
     occupiedBy: null,
     occupiedByUid: null,
@@ -220,6 +228,71 @@ async function leaveSelectedSpot() {
     action: "salida",
   });
 }
+
+// Generar QR de salida
+const handleLeaveButton = async () => {
+  if (!firebaseUser) {
+    alert("Esperando autenticación...");
+    return;
+  }
+
+  const currentUserSpot = getCurrentUserSpot();
+  if (!currentUserSpot) {
+    alert("No tienes un cajón ocupado para generar la salida.");
+    return;
+  }
+
+  qrContainer.innerHTML = "";
+  modalQrSalida.classList.remove('hidden');
+
+  // Generar token único
+  const token = Math.random().toString(36).substring(2, 15);
+  const url = `${window.location.origin}/salida.html?token=${token}`;
+
+  try {
+    if (typeof QRCode === 'undefined') {
+      throw new Error('La librería de QR no está cargada');
+    }
+
+    const tokenRef = doc(db, "tokens_salida", token);
+    await setDoc(tokenRef, {
+      active: true,
+      uid: firebaseUser.uid,
+      email: firebaseUser.email,
+      spotId: currentUserSpot.id,
+      createdAt: serverTimestamp(),
+      url: url,
+    });
+
+    // Escuchar si el token se utiliza para confirmar la salida
+    const unsubscribeToken = onSnapshot(tokenRef, async (tokenSnap) => {
+      if (tokenSnap.exists() && tokenSnap.data().active === false) {
+        qrContainer.innerHTML = '<p class="text-green-600 text-sm text-center">Salida completada. Redirigiendo a dashboard...</p>';
+        unsubscribeToken();
+        await leaveSelectedSpot();
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 900);
+      }
+    });
+
+    // Generar QR
+    new QRCode(qrContainer, {
+      text: url,
+      width: 200,
+      height: 200,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H,
+    });
+
+    console.log("QR generado para:", firebaseUser.email);
+
+  } catch (error) {
+    console.error("Error al generar QR de salida:", error);
+    qrContainer.innerHTML = `<p class="text-red-500 text-sm text-center">Error al generar código: ${error.message}</p>`;
+  }
+};
 
 async function resetSpots() {
   if (!confirm('¿Deseas reiniciar todos los estados y dejar los 50 lugares libres?')) return;
@@ -241,7 +314,11 @@ function clearSelection() {
   renderMap();
 }
 
+const hideModal = () => modalQrSalida.classList.add('hidden');
+
+leaveButton?.addEventListener('click', handleLeaveButton);
+closeModal?.addEventListener('click', hideModal);
+cancelBtn?.addEventListener('click', hideModal);
 occupyButton.addEventListener('click', occupySelectedSpot);
 resetButton.addEventListener('click', resetSpots);
-leaveButton.addEventListener('click', leaveSelectedSpot);
 clearSelectionButton.addEventListener('click', clearSelection);

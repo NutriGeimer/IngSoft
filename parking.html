@@ -43,7 +43,7 @@
             <p class="max-w-2xl text-slate-600">Bienvenido. Selecciona tu cajón de estacionamiento y controla tu acceso desde aquí.</p>
           </div>
 
-<div class="mb-4 flex flex-wrap gap-3">
+          <div class="mb-4 flex flex-wrap gap-3">
             <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800">Libre</span>
             <span class="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-800">Ocupado</span>
           </div>
@@ -79,24 +79,20 @@
             </li>
             <li class="flex items-center justify-between rounded-3xl bg-slate-50 p-5">
               <span class="availability-label text-sm text-slate-500">
-                <span class="material-symbols-outlined text-green-600">
-                  directions_car
-                </span>
+                <span class="material-symbols-outlined text-green-600">directions_car</span>
                 Lugares disponibles
               </span>
               <strong id="totalFree" class="text-lg text-slate-900">0</strong>
             </li>
-
             <li class="flex items-center justify-between rounded-3xl bg-slate-50 p-5">
               <span class="availability-label text-sm text-slate-500">
-                <span class="material-symbols-outlined text-red-500">
-                  directions_car
-                </span>
+                <span class="material-symbols-outlined text-red-500">directions_car</span>
                 Lugares ocupados
               </span>
               <strong id="totalOccupied" class="text-lg text-slate-900">0</strong>
             </li>
           </ul>
+
           <div class="occupancy-bar">
             <div id="occupancyFill"></div>
           </div>
@@ -104,12 +100,49 @@
           <div class="mt-6 grid gap-3">
             <button id="occupyButton" class="btn btn-primary" type="button" disabled>Marcar como ocupado</button>
             <button id="leaveButton" class="btn btn-outline-primary" type="button" disabled>Retirar mi cajón</button>
+            <!-- ✅ NUEVO: Botón QR de Salida -->
+            <button id="exitQrBtn" class="btn btn-secondary flex items-center justify-center gap-2" type="button" disabled>
+              <span class="material-symbols-outlined text-sm">qr_code</span>
+              Generar QR de Salida
+            </button>
             <button id="clearSelectionButton" class="btn btn-secondary" type="button">Deseleccionar</button>
           </div>
         </aside>
       </div>
     </main>
 
+    <!-- ✅ NUEVO: Modal QR de Salida -->
+    <div id="exitQrModal"
+         class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50
+                flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden">
+        <div class="p-4 border-b flex justify-between items-center bg-amber-50">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-600">qr_code</span>
+            <h3 class="text-xl font-bold text-slate-800">QR de Salida</h3>
+          </div>
+          <button id="closeExitModal" class="text-slate-500 hover:text-red-500 transition-colors">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="p-4 text-center">
+          <p class="text-sm text-slate-500 mb-4">
+            Escanea este código para registrar tu salida y liberar tu cajón automáticamente.
+          </p>
+          <div id="exitQrcode"
+               class="flex justify-center items-center min-h-[200px] bg-white p-2 rounded-lg">
+          </div>
+        </div>
+        <div class="p-4 border-t bg-amber-50 text-center">
+          <p class="text-xs text-slate-400">
+            Este código es de un solo uso. Una vez escaneado, tu cajón quedará libre.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script type="module" src="assets/js/parking.js"></script>
+    <script type="module" src="assets/js/salida.js"></script>
   </body>
 </html>

@@ -264,12 +264,11 @@ const handleLeaveButton = async () => {
       url: url,
     });
 
-    // Escuchar si el token se utiliza para confirmar la salida
-    const unsubscribeToken = onSnapshot(tokenRef, async (tokenSnap) => {
+    // Escuchar si el token fue procesado por salida.js para redirigir al usuario
+    const unsubscribeToken = onSnapshot(tokenRef, (tokenSnap) => {
       if (tokenSnap.exists() && tokenSnap.data().active === false) {
         qrContainer.innerHTML = '<p class="text-green-600 text-sm text-center">Salida completada. Redirigiendo a dashboard...</p>';
         unsubscribeToken();
-        await leaveSelectedSpot();
         setTimeout(() => {
           window.location.href = 'dashboard.html';
         }, 900);

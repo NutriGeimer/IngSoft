@@ -13,186 +13,182 @@
       theme: {
         extend: {
           colors: {
-            "surface-dim": "#dadada",
-            "secondary": "#546067",
-            "outline": "#827660",
-            "on-primary-container": "#6d5100",
-            "surface-container-high": "#e8e8e8",
-            "on-background": "#1a1c1c",
-            "surface-container-highest": "#e2e2e2",
-            "secondary-container": "#d7e4ec",
-            "background": "#f9f9f9",
-            "primary": "#785900",
-            "outline-variant": "#d4c5ab",
-            "on-secondary": "#ffffff",
-            "on-primary": "#ffffff",
-            "inverse-primary": "#fabd00",
-            "surface-container-low": "#f3f3f3",
-            "on-tertiary": "#ffffff",
-            "primary-container": "#ffc107",
-            "surface-container-lowest": "#ffffff",
-            "on-secondary-fixed": "#111d23",
-            "surface-variant": "#e2e2e2",
-            "on-surface-variant": "#4f4632",
-            "error": "#ba1a1a",
-            "surface-container": "#eeeeee",
-            "on-surface": "#1a1c1c",
-            "surface": "#f9f9f9",
+            "surface-dim": "#dadada", "secondary": "#546067", "outline": "#827660",
+            "on-primary-container": "#6d5100", "surface-container-high": "#e8e8e8",
+            "on-background": "#1a1c1c", "surface-container-highest": "#e2e2e2",
+            "secondary-container": "#d7e4ec", "background": "#f9f9f9",
+            "primary": "#785900", "outline-variant": "#d4c5ab",
+            "on-secondary": "#ffffff", "on-primary": "#ffffff",
+            "inverse-primary": "#fabd00", "surface-container-low": "#f3f3f3",
+            "on-tertiary": "#ffffff", "primary-container": "#ffc107",
+            "surface-container-lowest": "#ffffff", "on-secondary-fixed": "#111d23",
+            "surface-variant": "#e2e2e2", "on-surface-variant": "#4f4632",
+            "error": "#ba1a1a", "surface-container": "#eeeeee",
+            "on-surface": "#1a1c1c", "surface": "#f9f9f9",
           },
           fontFamily: {
-            "h3": ["Inter"], "body-lg": ["Inter"], "button": ["Inter"],
-            "h2": ["Inter"], "label-caps": ["Inter"], "h1": ["Inter"],
-            "body-md": ["Inter"], "body-sm": ["Inter"]
+            "h3":["Inter"],"body-lg":["Inter"],"button":["Inter"],
+            "h2":["Inter"],"label-caps":["Inter"],"h1":["Inter"],
+            "body-md":["Inter"],"body-sm":["Inter"]
           },
           fontSize: {
-            "h3": ["24px", {"lineHeight":"32px","letterSpacing":"0em","fontWeight":"600"}],
-            "body-lg": ["18px", {"lineHeight":"28px","letterSpacing":"0em","fontWeight":"400"}],
-            "button": ["16px", {"lineHeight":"24px","letterSpacing":"0.01em","fontWeight":"600"}],
-            "h2": ["32px", {"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],
-            "label-caps": ["12px", {"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"700"}],
-            "h1": ["40px", {"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"700"}],
-            "body-md": ["16px", {"lineHeight":"24px","letterSpacing":"0em","fontWeight":"400"}],
-            "body-sm": ["14px", {"lineHeight":"20px","letterSpacing":"0em","fontWeight":"400"}]
+            "h3":        ["24px",{"lineHeight":"32px","fontWeight":"600"}],
+            "body-lg":   ["18px",{"lineHeight":"28px","fontWeight":"400"}],
+            "button":    ["16px",{"lineHeight":"24px","letterSpacing":"0.01em","fontWeight":"600"}],
+            "h2":        ["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],
+            "label-caps":["12px",{"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"700"}],
+            "h1":        ["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"700"}],
+            "body-md":   ["16px",{"lineHeight":"24px","fontWeight":"400"}],
+            "body-sm":   ["14px",{"lineHeight":"20px","fontWeight":"400"}]
           }
         },
       },
     }
   </script>
   <style>
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+    body { background-color:#f9f9f9; }
+
+    .tbl-filter {
+      height: 36px;
+      padding: 0 0.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #1a1c1c;
+      background: #f8fafc;
+      outline: none;
+      appearance: auto;
+      transition: border-color .15s, box-shadow .15s;
     }
-    body { background-color: #f9f9f9; }
+    .tbl-filter:focus {
+      border-color: #ffc107;
+      box-shadow: 0 0 0 3px rgba(255,193,7,.15);
+      background: #fff;
+    }
+    .tbl-filter::placeholder { color: #94a3b8; }
+    #historyTableBody td { padding: 1rem 1.5rem; vertical-align: middle; }
   </style>
 </head>
 <body class="font-body-md text-on-surface">
 
+  <!-- HEADER NAV -->
   <header class="sticky top-0 w-full z-50 flex justify-between items-center px-8 h-16
-                 bg-white border-b border-slate-200 shadow-sm font-inter antialiased">
+                 bg-white border-b border-slate-200 shadow-sm antialiased">
     <div class="flex items-center gap-4">
-      <span class="material-symbols-outlined text-primary-container" style='font-variation-settings: "FILL" 1;'>local_parking</span>
+      <span class="material-symbols-outlined text-primary-container" style='font-variation-settings:"FILL" 1'>local_parking</span>
       <span class="text-xl font-black tracking-tighter text-slate-900">BeeParking</span>
     </div>
     <div class="flex items-center gap-6">
       <div class="hidden md:flex items-center gap-8 mr-4">
-        <a href="dashboard.html"
-           class="text-slate-600 font-medium hover:text-primary transition-colors">
-          Dashboard
-        </a>
-        <a href="historialAccesos.html"
-           class="text-amber-600 font-bold border-b-2 border-amber-500">
-          Historial de Accesos
-        </a>
-        <a href="parking.html"
-           class="text-slate-600 font-medium hover:text-primary transition-colors">
-          Mapa del Estacionamiento
-        </a>
-
+        <a href="dashboard.html"       class="text-slate-600 font-medium hover:text-primary transition-colors">Dashboard</a>
+        <a href="historialAccesos.html" class="text-amber-600 font-bold border-b-2 border-amber-500">Historial de Accesos</a>
+        <a href="parking.html"         class="text-slate-600 font-medium hover:text-primary transition-colors">Mapa del Estacionamiento</a>
       </div>
-          <a id="userNameLabel" class="text-sm font-semibold text-slate-600" href="profile.html"></a>
+      <a id="userNameLabel" class="text-sm font-semibold text-slate-600" href="profile.html"></a>
       <button id="logoutBtn" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">Cerrar sesión</button>
     </div>
   </header>
 
-  <main class="flex-1 flex flex-col items-center p-margin bg-background relative overflow-hidden px-4">
+  <main class="min-h-screen bg-background px-4 pb-12">
 
-    <div class="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+    <div class="fixed inset-0 opacity-5 pointer-events-none -z-0">
       <div class="absolute top-10 right-10 w-64 h-64 bg-primary-container rounded-full blur-3xl"></div>
       <div class="absolute bottom-10 left-10 w-96 h-96 bg-secondary-container rounded-full blur-3xl"></div>
     </div>
 
-    <div class="max-w-[90rem] w-full z-10 flex flex-col gap-6">
+    <div class="relative z-10 max-w-[90rem] mx-auto flex flex-col gap-5">
 
-      <div class="w-full mt-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <!-- Título de página -->
+      <div class="w-full mt-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h2 class="font-h1 text-h1 text-on-background">Mi Historial</h2>
+          <h1 class="font-h1 text-h1 text-on-background">Mi Historial</h1>
           <p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">
             Registro de tus entradas y salidas del estacionamiento.
           </p>
         </div>
         <button id="refreshBtn"
-                class="flex items-center gap-2 px-5 py-2.5 bg-primary-container
-                       text-on-primary-container font-button text-button rounded-lg
-                       hover:opacity-90 active:scale-95 transition-all shadow-sm">
+                class="self-start md:self-auto flex items-center gap-2 px-5 py-2.5
+                       bg-primary-container text-on-primary-container font-button
+                       text-button rounded-lg hover:opacity-90 active:scale-95 transition-all shadow-sm">
           <span class="material-symbols-outlined text-sm">refresh</span>
           Actualizar
         </button>
       </div>
 
-      <div class="w-full grid gap-6 lg:grid-cols-[1fr_2.5fr_1fr] items-stretch">
+      <div class="w-full grid gap-5 lg:grid-cols-[1fr_268px] items-start">
 
-        <aside class="bg-white rounded-[1.5rem] border border-slate-200 p-6 shadow-sm flex flex-col">
-          <div class="mb-6">
-            <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <span class="material-symbols-outlined text-amber-500">tune</span>
-              Filtros
-            </h2>
-          </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
 
-          <div class="flex flex-col flex-1 space-y-4">
-            <div>
-              <label class="block font-label-caps text-label-caps text-on-surface-variant mb-1">Tipo de acceso</label>
-              <select id="filterAction" class="w-full py-sm px-md border border-outline-variant rounded-lg font-body-md text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary-container transition-all">
-                <option value="todos">Todos</option>
+          <div class="px-6 py-5 border-b border-slate-100 bg-surface-container-low">
+
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-500 text-[20px]">table_rows</span>
+                <h3 class="font-h3 text-h3 text-on-surface">Mis Accesos</h3>
+              </div>
+              <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">Resultados</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+
+              <!-- Ícono filtros -->
+              <span class="material-symbols-outlined text-slate-400 text-[16px]">tune</span>
+
+              <!-- Tipo -->
+              <select id="filterAction" class="tbl-filter">
+                <option value="todos">Todos los tipos</option>
                 <option value="entrada">Entrada</option>
                 <option value="salida">Salida</option>
               </select>
-            </div>
-            <div>
-              <label class="block font-label-caps text-label-caps text-on-surface-variant mb-1">Cajón</label>
-              <input id="filterSpot" type="number" placeholder="Ej. 13" class="w-full py-sm px-md border border-outline-variant rounded-lg font-body-md text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary-container transition-all" />
-            </div>
-            <div>
-              <label class="block font-label-caps text-label-caps text-on-surface-variant mb-1">Fecha</label>
-              <input id="filterDate" type="date" class="w-full py-sm px-md border border-outline-variant rounded-lg font-body-md text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary-container transition-all" />
-            </div>
-            <div>
-              <label class="block font-label-caps text-label-caps text-on-surface-variant mb-1">Ordenar</label>
-              <select id="sortOrder" class="w-full py-sm px-md border border-outline-variant rounded-lg font-body-md text-on-surface bg-white focus:outline-none focus:ring-2 focus:ring-primary-container transition-all">
+
+              <!-- Cajón -->
+              <input id="filterSpot" type="number" placeholder="Cajón #" class="tbl-filter w-24" min="1" />
+
+              <!-- Fecha -->
+              <input id="filterDate" type="date" class="tbl-filter" />
+
+              <!-- Ordenar -->
+              <select id="sortOrder" class="tbl-filter">
                 <option value="desc">Más reciente</option>
                 <option value="asc">Más antiguo</option>
                 <option value="time_desc">Mayor tiempo</option>
               </select>
-            </div>
-            
-            <div class="mt-auto pt-4">
-              <button id="clearFilters" class="w-full px-md py-sm border border-outline text-secondary rounded-lg font-button text-button hover:bg-surface-container-low transition-colors whitespace-nowrap">
-                Limpiar filtros
+
+              <!-- Separador -->
+              <div class="w-px h-5 bg-slate-200"></div>
+
+              <!-- Limpiar -->
+              <button id="clearFilters"
+                      class="h-8 flex items-center gap-1 px-3 rounded-md text-[12.5px]
+                             font-semibold text-slate-500 hover:bg-slate-200 hover:text-slate-700
+                             transition-colors border border-slate-200">
+                <span class="material-symbols-outlined text-[14px]">close</span>
+                Limpiar
               </button>
+
             </div>
           </div>
-        </aside>
 
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-          <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-            <h3 class="font-h3 text-h3 text-on-surface">Mis Accesos</h3>
-            <span class="font-label-caps text-label-caps text-secondary uppercase">
-              Resultados
-            </span>
-          </div>
-
-          <div id="loadingState"
-               class="flex items-center justify-center gap-3 py-16 text-secondary">
-            <span class="material-symbols-outlined text-primary-container animate-spin">
-              progress_activity
-            </span>
+          <!-- Estado: cargando -->
+          <div id="loadingState" class="flex items-center justify-center gap-3 py-16 text-secondary">
+            <span class="material-symbols-outlined text-primary-container animate-spin">progress_activity</span>
             <span class="font-body-md">Cargando historial...</span>
           </div>
 
-          <div id="emptyState"
-               class="hidden flex-col items-center justify-center py-16 text-center">
-            <span class="material-symbols-outlined text-5xl text-surface-dim mb-3">
-              manage_search
-            </span>
+          <!-- Estado: vacío -->
+          <div id="emptyState" class="hidden flex-col items-center justify-center py-16 text-center">
+            <span class="material-symbols-outlined text-5xl text-surface-dim mb-3">manage_search</span>
             <p class="font-h3 text-h3 text-on-surface">Sin registros</p>
             <p class="font-body-md text-on-surface-variant mt-1">
               Aún no tienes accesos registrados o el filtro no tiene resultados.
             </p>
           </div>
 
+          <!-- Tabla -->
           <div class="overflow-x-auto">
             <table class="w-full text-left">
-              <thead class="bg-surface-container-low">
+              <thead class="bg-white border-b border-slate-100">
                 <tr>
                   <th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase">Tipo</th>
                   <th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase">Acción</th>
@@ -201,63 +197,71 @@
                   <th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase">Tiempo Estacionado</th>
                 </tr>
               </thead>
-              <tbody id="historyTableBody" class="hidden font-body-md text-body-md">
-              </tbody>
+              <tbody id="historyTableBody" class="hidden divide-y divide-slate-100 font-body-md text-body-md"></tbody>
             </table>
           </div>
 
-          <div id="paginationWrapper" class="flex justify-center items-center gap-2 py-4 border-t border-slate-100 bg-white">
+          <!-- Paginación -->
+          <div id="paginationWrapper"
+               class="flex justify-center items-center gap-2 py-4 border-t border-slate-100">
           </div>
 
-        </div> 
+        </div>
 
-        <aside class="rounded-[1.5rem] bg-white border border-slate-200 p-6 shadow-sm flex flex-col">
-          <div class="mb-6">
-            <h2 class="text-2xl font-bold text-slate-900">Resumen de actividad</h2>
-            <p class="mt-2 text-slate-600">Tus métricas personales de estacionamiento.</p>
+        <aside class="sticky top-20 rounded-2xl bg-white border border-slate-200 p-5 shadow-sm flex flex-col gap-4">
+
+          <div class="pb-2 border-b border-slate-100">
+            <h2 class="text-base font-bold text-slate-900">Resumen de actividad</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Tus métricas personales.</p>
           </div>
 
-          <ul class="space-y-4 mb-6">
-            <li class="flex items-center justify-between rounded-3xl bg-slate-50 p-5 border border-slate-100">
-              <span class="text-sm font-label-caps text-slate-500 uppercase tracking-widest">Total Accesos</span>
-              <strong id="totalCount" class="text-xl text-slate-900">—</strong>
-            </li>
-            <li class="flex items-center justify-between rounded-3xl bg-green-50 p-5 border border-green-100">
-              <span class="text-sm font-label-caps text-green-700 uppercase tracking-widest flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">login</span>Entradas</span>
-              <strong id="entryCount" class="text-xl text-green-700">—</strong>
-            </li>
-            <li class="flex items-center justify-between rounded-3xl bg-red-50 p-5 border border-red-100">
-              <span class="text-sm font-label-caps text-red-700 uppercase tracking-widest flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">logout</span>Salidas</span>
-              <strong id="exitCount" class="text-xl text-red-700">—</strong>
-            </li>
-          </ul>
-
-          <div class="grid grid-cols-2 gap-4 mt-auto">
-            <div class="rounded-3xl bg-slate-50 p-4 text-center border border-slate-100 flex flex-col justify-center items-center">
-              <span class="material-symbols-outlined text-amber-500 block mb-1">schedule</span>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Tiempo Total</p>
-              <p id="totalTimeStat" class="text-base font-black text-slate-900">—</p>
+          <!-- Contadores -->
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 border border-slate-100">
+              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Total Accesos</span>
+              <strong id="totalCount" class="text-lg text-slate-900">—</strong>
             </div>
-            <div class="rounded-3xl bg-slate-50 p-4 text-center border border-slate-100 flex flex-col justify-center items-center">
-              <span class="material-symbols-outlined text-amber-500 block mb-1">star</span>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Favorito</p>
-              <p id="favoriteSpotStat" class="text-base font-black text-slate-900">—</p>
+            <div class="flex items-center justify-between rounded-2xl bg-green-50 px-4 py-3 border border-green-100">
+              <span class="text-[11px] font-bold text-green-700 uppercase tracking-widest flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px]">login</span>Entradas
+              </span>
+              <strong id="entryCount" class="text-lg text-green-700">—</strong>
             </div>
-            <div class="rounded-3xl bg-slate-50 p-4 text-center border border-slate-100 flex flex-col justify-center items-center">
-              <span class="material-symbols-outlined text-amber-500 block mb-1">update</span>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Último</p>
-              <p id="lastAccessStat" class="text-sm font-black text-slate-900 truncate w-full">—</p>
-            </div>
-            <div class="rounded-3xl bg-slate-50 p-4 text-center border border-slate-100 flex flex-col justify-center items-center">
-              <span class="material-symbols-outlined text-amber-500 block mb-1">monitoring</span>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Promedio</p>
-              <p id="avgAccessStat" class="text-base font-black text-slate-900">—</p>
+            <div class="flex items-center justify-between rounded-2xl bg-red-50 px-4 py-3 border border-red-100">
+              <span class="text-[11px] font-bold text-red-700 uppercase tracking-widest flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px]">logout</span>Salidas
+              </span>
+              <strong id="exitCount" class="text-lg text-red-700">—</strong>
             </div>
           </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="rounded-2xl bg-slate-50 p-3 text-center border border-slate-100 flex flex-col items-center gap-1">
+              <span class="material-symbols-outlined text-amber-500 text-[17px]">schedule</span>
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Tiempo Total</p>
+              <p id="totalTimeStat" class="text-sm font-black text-slate-900">—</p>
+            </div>
+            <div class="rounded-2xl bg-slate-50 p-3 text-center border border-slate-100 flex flex-col items-center gap-1">
+              <span class="material-symbols-outlined text-amber-500 text-[17px]">star</span>
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Favorito</p>
+              <p id="favoriteSpotStat" class="text-sm font-black text-slate-900">—</p>
+            </div>
+            <div class="rounded-2xl bg-slate-50 p-3 text-center border border-slate-100 flex flex-col items-center gap-1">
+              <span class="material-symbols-outlined text-amber-500 text-[17px]">update</span>
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Último</p>
+              <p id="lastAccessStat" class="text-xs font-black text-slate-900 truncate w-full">—</p>
+            </div>
+            <div class="rounded-2xl bg-slate-50 p-3 text-center border border-slate-100 flex flex-col items-center gap-1">
+              <span class="material-symbols-outlined text-amber-500 text-[17px]">monitoring</span>
+              <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Promedio</p>
+              <p id="avgAccessStat" class="text-sm font-black text-slate-900">—</p>
+            </div>
+          </div>
+
         </aside>
 
-      </div> 
-    </div> 
+      </div>
+    </div>
   </main>
 
   <script type="module" src="./assets/js/historialAccesos.js"></script>

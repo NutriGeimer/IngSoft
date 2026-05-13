@@ -3,6 +3,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/f
 import { collection, doc, getDocs, query, orderBy, setDoc, updateDoc, serverTimestamp, writeBatch, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 import { getCurrentUserProfile, logoutUser } from "./auth.js";
 import { logAccess } from "./historialAccesos.js";
+import { setExitBtnState } from "./salida.js";
 
 const TOTAL_SPOTS = 50;
 const SPOTS_COLLECTION = "parkingSpots";
@@ -139,6 +140,9 @@ function updateSummary() {
   }
 
   currentUserInfo.textContent = `Usuario en sesión: ${userName}`;
+
+  //Habilita el boton QR de salida solo si el usuario tiene cajon ocupado.
+  setExitBtnState(!!currentUserSpot);
 
   const selectedSpot = spots.find((spot) => spot.id === selectedSpotId) || null;
 

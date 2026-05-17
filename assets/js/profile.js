@@ -58,6 +58,7 @@ async function loadUserProfile(user) {
         plates: profile?.nplates || profile?.plates || ""
     };
     updateUI(profileData);
+    if (profile?.role === "admin") document.getElementById('adminNavLink')?.classList.remove('hidden');
 }
 
 onAuthStateChanged(auth, async (user) => {

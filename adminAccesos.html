@@ -29,11 +29,20 @@
     .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
     body { background-color:#f9f9f9; font-family:'Inter',sans-serif; }
     .tbl-filter {
-      height:36px; padding:0 0.75rem; border:1px solid #e2e8f0; border-radius:6px;
-      font-size:13px; color:#1a1c1c; background:#f8fafc; outline:none; transition:border-color .15s,box-shadow .15s;
+      height: 38px;
+      padding: 0 0.85rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #1a1c1c;
+      background: #f8fafc;
+      outline: none;
+      cursor: pointer;
+      transition: border-color .15s, box-shadow .15s, background .15s;
     }
-    .tbl-filter:focus { border-color:#ffc107; box-shadow:0 0 0 3px rgba(255,193,7,.15); background:#fff; }
-    .tbl-filter::placeholder { color:#94a3b8; }
+    .tbl-filter:focus { border-color: #ffc107; box-shadow: 0 0 0 3px rgba(255,193,7,.18); background: #fff; }
+    .tbl-filter:hover:not(:focus) { border-color: #cbd5e1; background: #fff; }
+    .tbl-filter::placeholder { color: #94a3b8; }
     #accessTableBody td { padding:1rem 1.5rem; vertical-align:middle; }
   </style>
 </head>

@@ -26,6 +26,7 @@ onAuthStateChanged(auth, async (user) => {
   const profile = await getCurrentUserProfile(user.uid);
   const userName = profile?.name || user.email || "Usuario";
   if (userNameLabel) userNameLabel.textContent = userName;
+  if (profile?.role === "admin") document.getElementById('adminNavLink')?.classList.remove('hidden');
 });
 
 logoutBtn?.addEventListener('click', async () => {

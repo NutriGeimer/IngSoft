@@ -1,7 +1,7 @@
 ﻿import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
 import { collection, doc, getDocs, query, orderBy, updateDoc, serverTimestamp, writeBatch, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
-import { getCurrentUserProfile, logoutUser } from "./auth.js";
+import { getCurrentUserProfile, logoutUser, applyAdminRole, checkAdminCache } from "./auth.js";
 import { logAccess } from "./historialAccesos.js";
 
 const userNameLabel = document.getElementById('userNameLabel');
@@ -31,6 +31,8 @@ let selectedSpotId = null;
 let firebaseUser = null;
 let userName = "Usuario";
 
+checkAdminCache();
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";
@@ -40,10 +42,7 @@ onAuthStateChanged(auth, async (user) => {
   const profile = await getCurrentUserProfile(user.uid);
   userName = profile?.name || user.email || "Usuario";
   if (userNameLabel) userNameLabel.textContent = userName;
-  if (profile?.role === "admin") {
-    const adminLink = document.getElementById('adminNavLink');
-    if (adminLink) { adminLink.classList.remove('hidden'); adminLink.style.display = 'inline'; }
-  }
+  applyAdminRole(profile?.role);
   await initSpotListener();
 });
 

@@ -10,7 +10,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-import { getCurrentUserProfile, logoutUser } from "./auth.js";
+import { getCurrentUserProfile, logoutUser, applyAdminRole, checkAdminCache } from "./auth.js";
 
 const COLLECTION = "accessHistory";
 
@@ -51,6 +51,8 @@ export function formatTimestamp(timestamp) {
     });
 }
 
+checkAdminCache();
+
 if (document.getElementById("historyTableBody")) {
     let currentUser = null;
     let allRecords = [];
@@ -83,10 +85,7 @@ if (document.getElementById("historyTableBody")) {
         const profile = await getCurrentUserProfile(user.uid);
         const displayName = profile?.name || user.email || "Usuario";
         if (userNameLabel) userNameLabel.textContent = displayName;
-        if (profile?.role === "admin") {
-            const adminLink = document.getElementById('adminNavLink');
-            if (adminLink) { adminLink.classList.remove('hidden'); adminLink.style.display = 'inline'; }
-        }
+        applyAdminRole(profile?.role);
 
         logoutBtn?.addEventListener('click', async () => {
           await logoutUser();

@@ -40,15 +40,16 @@ export function setButtonLoading(button, isLoading, text, loadingText = "Procesa
 export async function registerUser({ name, email, password, nplates }) {
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   const user = credential.user;
- 
+
   await setDoc(doc(db, "users", user.uid), {
     uid: user.uid,
     name,
     email,
     nplates: nplates || "",
+    role: "user",
     createdAt: serverTimestamp()
   });
- 
+
   return user;
 }
  
@@ -98,6 +99,14 @@ export async function logoutUser() {
   await signOut(auth);
 }
  
+export function requireAdmin(redirectPath = "dashboard.html") {
+  return onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = "login.html"; return; }
+    const profile = await getCurrentUserProfile(user.uid);
+    if (profile?.role !== "admin") window.location.href = redirectPath;
+  });
+}
+
 export function getFirebaseErrorMessage(error) {
   const code = error?.code || "";
  

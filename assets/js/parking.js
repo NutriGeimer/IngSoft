@@ -40,6 +40,7 @@ onAuthStateChanged(auth, async (user) => {
   const profile = await getCurrentUserProfile(user.uid);
   userName = profile?.name || user.email || "Usuario";
   if (userNameLabel) userNameLabel.textContent = userName;
+  if (profile?.role === "admin") document.getElementById('adminNavLink')?.classList.remove('hidden');
   await initSpotListener();
 });
 
@@ -61,6 +62,8 @@ async function initSpotListener() {
       id: doc.data().id,
       occupiedBy: doc.data().occupiedBy || null,
       occupiedByUid: doc.data().occupiedByUid || null,
+      reservedByAdmin: doc.data().reservedByAdmin || false,
+      reservationLabel: doc.data().reservationLabel || null,
     }));
     renderMap();
   });
@@ -78,6 +81,7 @@ async function initializeSpots(snapshot) {
         id: index,
         occupiedBy: null,
         occupiedByUid: null,
+        reservedByAdmin: false,
         updatedAt: serverTimestamp(),
       });
     }
@@ -96,23 +100,29 @@ function renderMap() {
     const slot = document.createElement('button');
     slot.type = 'button';
     slot.className = 'slot';
-    slot.classList.add(spot.occupiedBy ? 'slot-occupied' : 'slot-free');
-    if (spot.id === selectedSpotId) slot.classList.add('slot-selected');
-    if (spot.occupiedByUid === firebaseUser?.uid) slot.classList.add('slot-mine');
 
-    const statusLabel = spot.occupiedBy
-      ? spot.occupiedByUid === firebaseUser?.uid ? 'Ocupado por ti' : 'Ocupado'
-      : 'Libre';
+    let statusLabel;
+    if (spot.reservedByAdmin) {
+      slot.classList.add('slot-reserved');
+      slot.disabled = true;
+      statusLabel = spot.reservationLabel || 'Reservado';
+    } else if (spot.occupiedBy) {
+      slot.classList.add(spot.occupiedByUid === firebaseUser?.uid ? 'slot-mine' : 'slot-occupied');
+      statusLabel = spot.occupiedByUid === firebaseUser?.uid ? 'Ocupado por ti' : 'Ocupado';
+    } else {
+      slot.classList.add('slot-free');
+      statusLabel = 'Libre';
+    }
 
+    if (spot.id === selectedSpotId && !spot.reservedByAdmin) slot.classList.add('slot-selected');
     slot.dataset.spotId = spot.id;
     slot.setAttribute('aria-pressed', spot.id === selectedSpotId ? 'true' : 'false');
-
     slot.innerHTML = `
       <span class="slot-number">Cajón ${spot.id}</span>
       <span class="slot-status">${statusLabel}</span>
     `;
 
-    slot.addEventListener('click', () => handleSpotClick(spot.id));
+    if (!spot.reservedByAdmin) slot.addEventListener('click', () => handleSpotClick(spot.id));
     parkingMap.appendChild(slot);
   });
 
@@ -120,7 +130,7 @@ function renderMap() {
 }
 
 function updateSummary() {
-  const occupiedCount = spots.filter((spot) => spot.occupiedBy !== null).length;
+  const occupiedCount = spots.filter((spot) => spot.occupiedBy !== null || spot.reservedByAdmin).length;
   const freeCount = TOTAL_SPOTS - occupiedCount;
   const currentUserSpot = getCurrentUserSpot();
 
@@ -179,7 +189,7 @@ async function occupySelectedSpot() {
   const selectedSpot = spots.find((spot) => spot.id === selectedSpotId);
   const currentUserSpot = getCurrentUserSpot();
 
-  if (!selectedSpot || selectedSpot.occupiedBy !== null) return;
+  if (!selectedSpot || selectedSpot.occupiedBy !== null || selectedSpot.reservedByAdmin) return;
   if (currentUserSpot) {
     alert(`Ya tienes el cajón ${currentUserSpot.id} ocupado. Libéralo antes de ocupar otro`);
     return;
@@ -294,9 +304,10 @@ const handleLeaveButton = async () => {
 };
 
 async function resetSpots() {
-  if (!confirm('¿Deseas reiniciar todos los estados y dejar los 50 lugares libres?')) return;
+  if (!confirm('¿Deseas reiniciar todos los estados y dejar los lugares libres? (No afecta cajones reservados por Admin)')) return;
   const batch = writeBatch(db);
   spots.forEach((spot) => {
+    if (spot.reservedByAdmin) return;
     const spotRef = doc(db, SPOTS_COLLECTION, String(spot.id));
     batch.update(spotRef, {
       occupiedBy: null,

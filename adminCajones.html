@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BeeParking | Admin - Cajones</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#785900", "primary-container": "#ffc107",
+            "on-primary-container": "#6d5100", "on-primary": "#ffffff",
+            "secondary": "#546067", "background": "#f9f9f9",
+            "surface": "#f9f9f9", "on-surface": "#1a1c1c",
+            "on-surface-variant": "#4f4632", "surface-container": "#eeeeee",
+            "surface-container-low": "#f3f3f3",
+          },
+          fontFamily: { "body-md": ["Inter"] },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+    body { background-color:#f9f9f9; font-family:'Inter',sans-serif; }
+
+    /* Grid de cajones */
+    .admin-parking-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 0.6rem;
+    }
+    .admin-slot {
+      min-height: 80px;
+      border-radius: 0.75rem;
+      border: 2px solid transparent;
+      padding: 0.6rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .admin-slot:hover:not(.slot-disabled) { transform: translateY(-2px); }
+    .admin-slot-free   { background: #e9f8ed; color: #1f4336; }
+    .admin-slot-occ    { background: #ffe9e9; color: #5f1b1b; cursor: not-allowed; }
+    .admin-slot-res    { background: #fff3cd; color: #664d03; cursor: not-allowed; }
+    .admin-slot-sel    { background: #fef3c7; color: #78350f; border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,.2); }
+    .slot-disabled     { opacity: 0.75; cursor: not-allowed; }
+    .admin-slot-number { font-weight: 700; font-size: 0.82rem; }
+    .admin-slot-status { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+
+    .label-input {
+      height: 40px; padding: 0 0.75rem; border: 1px solid #e2e8f0; border-radius: 8px;
+      font-size: 14px; color: #1a1c1c; background: #fff; outline: none;
+      transition: border-color .15s, box-shadow .15s; width: 100%;
+    }
+    .label-input:focus { border-color: #ffc107; box-shadow: 0 0 0 3px rgba(255,193,7,.15); }
+    .label-input::placeholder { color: #94a3b8; }
+  </style>
+</head>
+<body class="text-on-surface">
+
+  <!-- NAVBAR ADMIN -->
+  <header class="sticky top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-white border-b border-slate-200 shadow-sm">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined text-amber-500" style='font-variation-settings:"FILL" 1'>admin_panel_settings</span>
+      <span class="text-xl font-black tracking-tighter text-slate-900">BeeParking</span>
+      <span class="text-amber-600 text-xs font-bold uppercase tracking-widest bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">Admin</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="hidden md:flex items-center gap-6 mr-4">
+        <a href="adminUsuarios.html" class="text-slate-600 font-medium hover:text-slate-900 transition-colors text-sm">Usuarios</a>
+        <a href="adminAccesos.html"  class="text-slate-600 font-medium hover:text-slate-900 transition-colors text-sm">Accesos Global</a>
+        <a href="adminCajones.html"  class="text-amber-600 font-bold border-b-2 border-amber-500 text-sm">Cajones Admin</a>
+        <span class="w-px h-5 bg-slate-200"></span>
+        <a href="parking.html" class="text-slate-500 hover:text-slate-700 transition-colors text-sm">← Volver al sitio</a>
+      </div>
+      <a id="userNameLabel" class="text-sm font-semibold text-slate-600" href="profile.html"></a>
+      <button id="logoutBtn" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="min-h-screen px-4 pb-12">
+    <div class="relative max-w-[90rem] mx-auto flex flex-col gap-5">
+
+      <!-- Título -->
+      <div class="w-full mt-6">
+        <h1 class="text-4xl font-black tracking-tight text-on-surface">Gestión de Cajones</h1>
+        <p class="text-on-surface-variant mt-1">Reserva cajones para eventos sin necesidad de QR. Selecciona los cajones libres del mapa.</p>
+      </div>
+
+      <!-- Layout: mapa + panel de control -->
+      <div class="grid gap-6 lg:grid-cols-[1fr_320px]">
+
+        <!-- Mapa -->
+        <section class="rounded-2xl bg-white border border-slate-200 p-6 shadow-sm">
+          <!-- Leyenda -->
+          <div class="mb-4 flex flex-wrap gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800">Libre (seleccionable)</span>
+            <span class="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-800">Ocupado por usuario</span>
+            <span class="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-800">Reservado por Admin</span>
+            <span class="inline-flex items-center gap-2 rounded-full bg-yellow-100 px-3 py-1.5 text-xs font-semibold text-yellow-900 border border-yellow-300">Seleccionado</span>
+          </div>
+
+          <!-- Loading -->
+          <div id="mapLoading" class="flex items-center justify-center gap-3 py-16 text-slate-400">
+            <div class="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-b-amber-500"></div>
+            <span class="text-sm font-medium">Cargando mapa...</span>
+          </div>
+
+          <div id="adminParkingMap" class="admin-parking-grid hidden" aria-label="Mapa de cajones - modo admin"></div>
+        </section>
+
+        <!-- Panel de control -->
+        <aside class="flex flex-col gap-4">
+
+          <!-- Cajones seleccionados -->
+          <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
+            <h2 class="font-bold text-slate-900 mb-3">Cajones seleccionados</h2>
+            <div id="selectedSpotsInfo" class="text-sm text-slate-400 italic">Ninguno seleccionado</div>
+            <div id="selectedSpotsList" class="flex flex-wrap gap-1.5 mt-2"></div>
+          </div>
+
+          <!-- Formulario de reserva -->
+          <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
+            <h2 class="font-bold text-slate-900 mb-3">Reservar para evento</h2>
+            <label class="text-xs text-slate-500 font-semibold uppercase tracking-wide mb-1 block">Etiqueta (opcional)</label>
+            <input id="reservationLabel" type="text" placeholder="Ej: Evento Graduación" class="label-input mb-4" maxlength="40" />
+            <button id="reserveBtn" disabled class="w-full flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-amber-600 transition disabled:opacity-40 disabled:cursor-not-allowed">
+              <span class="material-symbols-outlined text-sm" style='font-variation-settings:"FILL" 1'>lock</span>
+              Reservar seleccionados
+            </button>
+          </div>
+
+          <!-- Cajones reservados por admin -->
+          <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm flex-1">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="font-bold text-slate-900">Reservados actualmente</h2>
+              <button id="releaseAllBtn" class="text-xs font-semibold text-red-600 hover:text-red-800 border border-red-200 rounded-full px-3 py-1 transition hover:bg-red-50 hidden">
+                Liberar todos
+              </button>
+            </div>
+            <div id="reservedListEmpty" class="text-sm text-slate-400 italic">Sin cajones reservados.</div>
+            <ul id="reservedList" class="space-y-2"></ul>
+          </div>
+
+        </aside>
+      </div>
+
+    </div>
+  </main>
+  <script type="module" src="assets/js/adminCajones.js"></script>
+</body>
+</html>

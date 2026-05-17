@@ -83,7 +83,10 @@ if (document.getElementById("historyTableBody")) {
         const profile = await getCurrentUserProfile(user.uid);
         const displayName = profile?.name || user.email || "Usuario";
         if (userNameLabel) userNameLabel.textContent = displayName;
-        if (profile?.role === "admin") document.getElementById('adminNavLink')?.classList.remove('hidden');
+        if (profile?.role === "admin") {
+            const adminLink = document.getElementById('adminNavLink');
+            if (adminLink) { adminLink.classList.remove('hidden'); adminLink.style.display = 'inline'; }
+        }
 
         logoutBtn?.addEventListener('click', async () => {
           await logoutUser();

@@ -58,7 +58,10 @@ async function loadUserProfile(user) {
         plates: profile?.nplates || profile?.plates || ""
     };
     updateUI(profileData);
-    if (profile?.role === "admin") document.getElementById('adminNavLink')?.classList.remove('hidden');
+    if (profile?.role === "admin") {
+        const adminLink = document.getElementById('adminNavLink');
+        if (adminLink) { adminLink.classList.remove('hidden'); adminLink.style.display = 'inline'; }
+    }
 }
 
 onAuthStateChanged(auth, async (user) => {

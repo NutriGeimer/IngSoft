@@ -1,6 +1,6 @@
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-import { getCurrentUserProfile, logoutUser, updateCurrentUserProfile } from "./auth.js";
+import { getCurrentUserProfile, logoutUser, updateCurrentUserProfile, applyAdminRole, checkAdminCache } from "./auth.js";
 
 // Elementos del formulario y modal
 const editProfileForm = document.getElementById('editProfileForm');
@@ -25,6 +25,8 @@ const profileAvatar = document.getElementById('profileAvatar');
 const logoutBtn = document.getElementById('logoutBtn');
 
 let currentUser = null;
+
+checkAdminCache();
 
 /**
  * Actualiza todos los elementos de la interfaz con los datos del usuario
@@ -58,10 +60,7 @@ async function loadUserProfile(user) {
         plates: profile?.nplates || profile?.plates || ""
     };
     updateUI(profileData);
-    if (profile?.role === "admin") {
-        const adminLink = document.getElementById('adminNavLink');
-        if (adminLink) { adminLink.classList.remove('hidden'); adminLink.style.display = 'inline'; }
-    }
+    applyAdminRole(profile?.role);
 }
 
 onAuthStateChanged(auth, async (user) => {

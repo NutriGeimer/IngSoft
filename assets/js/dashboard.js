@@ -2,10 +2,12 @@ import { db } from "./firebase-config.js";
 import { doc, setDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
 import { getAuth, onAuthStateChanged } from  "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-import { getCurrentUserProfile, logoutUser } from "./auth.js";
+import { getCurrentUserProfile, logoutUser, applyAdminRole, checkAdminCache } from "./auth.js";
 
 const auth = getAuth();
 let currentUser = null;
+
+checkAdminCache();
 
 const userNameLabel = document.getElementById('userNameLabel');
 const logoutBtn = document.getElementById('logoutBtn');
@@ -26,10 +28,7 @@ onAuthStateChanged(auth, async (user) => {
   const profile = await getCurrentUserProfile(user.uid);
   const userName = profile?.name || user.email || "Usuario";
   if (userNameLabel) userNameLabel.textContent = userName;
-  if (profile?.role === "admin") {
-    const adminLink = document.getElementById('adminNavLink');
-    if (adminLink) { adminLink.classList.remove('hidden'); adminLink.style.display = 'inline'; }
-  }
+  applyAdminRole(profile?.role);
 });
 
 logoutBtn?.addEventListener('click', async () => {

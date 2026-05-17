@@ -99,6 +99,27 @@ export async function logoutUser() {
   await signOut(auth);
 }
  
+export function applyAdminRole(role) {
+  const isAdmin = role === "admin";
+  if (isAdmin) {
+    sessionStorage.setItem('bpAdmin', '1');
+  } else {
+    sessionStorage.removeItem('bpAdmin');
+  }
+  const link = document.getElementById('adminNavLink');
+  if (link && isAdmin) {
+    link.classList.remove('hidden');
+    link.style.display = 'inline';
+  }
+}
+
+export function checkAdminCache() {
+  if (sessionStorage.getItem('bpAdmin') === '1') {
+    const link = document.getElementById('adminNavLink');
+    if (link) { link.classList.remove('hidden'); link.style.display = 'inline'; }
+  }
+}
+
 export function requireAdmin(redirectPath = "dashboard.html") {
   return onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.href = "login.html"; return; }

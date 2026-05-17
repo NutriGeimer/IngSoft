@@ -83,6 +83,7 @@ if (document.getElementById("historyTableBody")) {
         const profile = await getCurrentUserProfile(user.uid);
         const displayName = profile?.name || user.email || "Usuario";
         if (userNameLabel) userNameLabel.textContent = displayName;
+        if (profile?.role === "admin") document.getElementById('adminNavLink')?.classList.remove('hidden');
 
         logoutBtn?.addEventListener('click', async () => {
           await logoutUser();

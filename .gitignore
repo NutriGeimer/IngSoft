@@ -1,0 +1,18 @@
+# Firebase
+.firebase/
+.firebaserc.local
+
+# Editor
+.vscode/
+
+# Dependencies
+node_modules/
+
+# Environment variables (never commit secrets)
+.env
+.env.*
+*.local
+
+# Logs
+*.log
+npm-debug.log*

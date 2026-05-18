@@ -12,7 +12,10 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: var(--ci-text);
   background-color: var(--ci-bg);
+  overflow-x: hidden;
 }
+
+html { overflow-x: hidden; }
 
 .auth-page {
   min-height: 100vh;
@@ -161,9 +164,6 @@ body {
   transform: translateY(-4px);
   box-shadow: 0 18px 36px rgba(15, 23, 42, 0.10);
 }
-
-
-
 
 .parking-page {
   padding: 2rem 1rem 3rem;
@@ -372,4 +372,123 @@ body {
   width: 0%;
   background: #198754;
   transition: width 0.3s ease;
+}
+
+@media (max-width: 992px) {
+  .parking-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .parking-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+  .slot {
+    min-height: 88px;
+    padding: 0.55rem;
+    border-radius: 0.75rem;
+  }
+  .slot-number { font-size: 0.85rem; }
+  .slot-status { font-size: 0.7rem; }
+}
+
+@media (max-width: 380px) {
+  .parking-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .parking-page {
+    padding: 1rem 0.75rem 2rem;
+  }
+}
+
+/* ── Tabla → cards en móvil */
+@media (max-width: 720px) {
+  .history-table,
+  .admin-history-table { display: block; }
+
+  .history-table thead,
+  .admin-history-table thead { display: none; }
+
+  .history-table tbody,
+  .admin-history-table tbody { display: block; }
+
+  .history-table tr,
+  .admin-history-table tr {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.85rem;
+    row-gap: 0.25rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .history-table tr:hover,
+  .admin-history-table tr:hover { background: transparent !important; }
+
+  .history-table td,
+  .admin-history-table td {
+    display: block;
+    padding: 0 !important;
+    border: none;
+  }
+
+  .history-table td:first-child,
+  .admin-history-table td:first-child {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    align-self: center;
+  }
+
+  .history-table td:not(:first-child),
+  .admin-history-table td:not(:first-child) {
+    grid-column: 2;
+    min-width: 0;
+  }
+}
+
+/* Drawer del menú */
+.mobile-drawer {
+  transition: transform 0.25s ease;
+}
+.mobile-drawer.hidden { display: block; transform: translateX(100%); pointer-events: none; visibility: hidden; }
+.mobile-drawer:not(.hidden) { transform: translateX(0); visibility: visible; }
+
+.mobile-backdrop {
+  transition: opacity 0.25s ease;
+}
+.mobile-backdrop.hidden { display: block; opacity: 0; pointer-events: none; }
+.mobile-backdrop:not(.hidden) { opacity: 1; }
+
+body.drawer-open { overflow: hidden; }
+
+/* RESPONSIVE ADMIN — adiciones para móvil en páginas admin*/
+/* admin-parking-grid */
+@media (max-width: 992px) {
+  .admin-parking-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.5rem;
+  }
+}
+@media (max-width: 640px) {
+  .admin-parking-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+  }
+  .admin-slot {
+    min-height: 70px;
+    padding: 0.45rem;
+    border-radius: 0.6rem;
+  }
+  .admin-slot-number { font-size: 0.75rem; }
+  .admin-slot-status { font-size: 0.62rem; letter-spacing: 0.02em; }
+}
+@media (max-width: 380px) {
+  .admin-parking-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/css/styles.css" />
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -39,24 +40,31 @@
       outline: none;
       cursor: pointer;
       transition: border-color .15s, box-shadow .15s, background .15s;
+      min-width: 0;
     }
     .tbl-filter:focus { border-color: #ffc107; box-shadow: 0 0 0 3px rgba(255,193,7,.18); background: #fff; }
     .tbl-filter:hover:not(:focus) { border-color: #cbd5e1; background: #fff; }
     .tbl-filter::placeholder { color: #94a3b8; }
     #accessTableBody td { padding:1rem 1.5rem; vertical-align:middle; }
+
+    @media (max-width: 720px) {
+      #accessTableBody td { padding: 0 !important; }
+    }
   </style>
 </head>
 <body class="text-on-surface">
 
   <!-- NAVBAR ADMIN -->
-  <header class="sticky top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-white border-b border-slate-200 shadow-sm">
-    <div class="flex items-center gap-3">
-      <span class="material-symbols-outlined text-amber-500" style='font-variation-settings:"FILL" 1'>admin_panel_settings</span>
-      <span class="text-xl font-black tracking-tighter text-slate-900">BeeParking</span>
-      <span class="text-amber-600 text-xs font-bold uppercase tracking-widest bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5">Admin</span>
+  <header class="sticky top-0 w-full z-50 flex justify-between items-center px-4 sm:px-6 md:px-8 h-16 bg-white border-b border-slate-200 shadow-sm">
+    <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+      <span class="material-symbols-outlined text-amber-500 flex-shrink-0" style='font-variation-settings:"FILL" 1'>admin_panel_settings</span>
+      <span class="text-lg sm:text-xl font-black tracking-tighter text-slate-900">BeeParking</span>
+      <span class="text-amber-600 text-[10px] sm:text-xs font-bold uppercase tracking-widest bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5 flex-shrink-0">Admin</span>
     </div>
-    <div class="flex items-center gap-6">
-      <div class="hidden md:flex items-center gap-6 mr-4">
+
+    <!-- Nav DESKTOP -->
+    <div class="hidden lg:flex items-center gap-6">
+      <div class="flex items-center gap-6 mr-4">
         <a href="adminUsuarios.html" class="text-slate-600 font-medium hover:text-slate-900 transition-colors text-sm">Usuarios</a>
         <a href="adminAccesos.html"  class="text-amber-600 font-bold border-b-2 border-amber-500 text-sm">Accesos Global</a>
         <a href="adminCajones.html"  class="text-slate-600 font-medium hover:text-slate-900 transition-colors text-sm">Cajones Admin</a>
@@ -66,47 +74,110 @@
       <a id="userNameLabel" class="text-sm font-semibold text-slate-600" href="profile.html"></a>
       <button id="logoutBtn" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">Cerrar sesión</button>
     </div>
+
+    <!-- Botón hamburguesa -->
+    <button id="mobileMenuBtn"
+            class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg text-slate-700 hover:bg-slate-100 transition flex-shrink-0"
+            aria-label="Abrir menú">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
   </header>
 
-  <main class="min-h-screen px-4 pb-12">
-    <div class="relative max-w-[90rem] mx-auto flex flex-col gap-5">
+  <!-- Drawer + backdrop móvil -->
+  <div id="mobileBackdrop" class="mobile-backdrop hidden fixed inset-0 bg-black/40 z-40 lg:hidden"></div>
+  <aside id="mobileDrawer"
+         class="mobile-drawer hidden fixed top-0 right-0 h-full w-72 max-w-[80vw] bg-white z-50 shadow-2xl lg:hidden flex flex-col">
+
+    <div class="flex items-center justify-between px-5 h-16 border-b border-slate-200">
+      <div class="flex items-center gap-2">
+        <span class="text-base font-black tracking-tighter text-slate-900">Menú</span>
+        <span class="text-amber-600 text-[9px] font-bold uppercase tracking-widest bg-amber-50 border border-amber-200 rounded-full px-1.5 py-0.5">Admin</span>
+      </div>
+      <button id="mobileCloseBtn" class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 hover:bg-slate-100" aria-label="Cerrar menú">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- Tarjeta de usuario -->
+    <a href="profile.html" class="flex items-center gap-3 mx-4 mt-4 px-3 py-3 rounded-xl bg-amber-50 border border-amber-100 hover:bg-amber-100 transition min-w-0">
+      <div class="w-9 h-9 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+      </div>
+      <div class="flex flex-col min-w-0 flex-1">
+        <span class="text-[10px] font-bold text-amber-700 uppercase tracking-widest">Admin · sesión activa</span>
+        <span id="drawerUserName" class="text-sm font-bold text-slate-900 truncate">Cargando...</span>
+      </div>
+    </a>
+
+    <nav class="flex-1 flex flex-col gap-1 p-4">
+      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-1">Panel Admin</p>
+      <a href="adminUsuarios.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 font-medium hover:bg-slate-100">
+        <span class="material-symbols-outlined text-[20px] text-slate-400">group</span>Usuarios
+      </a>
+      <a href="adminAccesos.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-50 text-amber-700 font-bold">
+        <span class="material-symbols-outlined text-[20px] text-amber-500">history</span>Accesos Global
+      </a>
+      <a href="adminCajones.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 font-medium hover:bg-slate-100">
+        <span class="material-symbols-outlined text-[20px] text-slate-400">grid_view</span>Cajones Admin
+      </a>
+
+      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-1 mt-4 border-t border-slate-100 pt-4">Sitio</p>
+      <a href="parking.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 font-medium hover:bg-slate-100">
+        <span class="material-symbols-outlined text-[20px] text-slate-400">arrow_back</span>Volver al sitio
+      </a>
+      <a href="profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 font-medium hover:bg-slate-100">
+        <span class="material-symbols-outlined text-[20px] text-slate-400">manage_accounts</span>Mi perfil
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-slate-100">
+      <button id="logoutBtnMobile" class="w-full rounded-full border border-slate-300 px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <main class="min-h-screen px-4 pb-10 sm:pb-12">
+    <div class="relative max-w-[90rem] mx-auto flex flex-col gap-4 sm:gap-5">
 
       <!-- Título -->
-      <div class="w-full mt-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div class="w-full mt-4 sm:mt-6 flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4">
         <div>
-          <h1 class="text-4xl font-black tracking-tight text-on-surface">Historial Global de Accesos</h1>
-          <p class="text-on-surface-variant mt-1">Registro de entradas y salidas de todos los usuarios.</p>
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-on-surface">Historial Global de Accesos</h1>
+          <p class="text-sm sm:text-base text-on-surface-variant mt-1">Registro de entradas y salidas de todos los usuarios.</p>
         </div>
-        <button id="refreshBtn" class="flex items-center gap-2 rounded-2xl bg-primary-container px-5 py-2.5 text-sm font-bold text-on-primary-container hover:opacity-90 transition self-start md:self-auto">
+        <button id="refreshBtn" class="self-start md:self-auto flex items-center gap-2 rounded-2xl bg-primary-container px-4 sm:px-5 py-2 sm:py-2.5 text-sm font-bold text-on-primary-container hover:opacity-90 transition">
           <span class="material-symbols-outlined text-sm">refresh</span>Actualizar
         </button>
       </div>
 
       <!-- Stats -->
-      <div class="grid grid-cols-3 gap-4">
-        <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
-          <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Total Accesos</p>
-          <p id="statTotal" class="text-3xl font-black text-slate-900 mt-1">—</p>
+      <div class="grid grid-cols-3 gap-3 sm:gap-4">
+        <div class="rounded-2xl bg-white border border-slate-200 p-3 sm:p-5 shadow-sm">
+          <p class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-500 font-semibold">Total</p>
+          <p id="statTotal" class="text-xl sm:text-3xl font-black text-slate-900 mt-1">—</p>
         </div>
-        <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
-          <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Entradas</p>
-          <p id="statEntries" class="text-3xl font-black text-green-700 mt-1">—</p>
+        <div class="rounded-2xl bg-white border border-slate-200 p-3 sm:p-5 shadow-sm">
+          <p class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-500 font-semibold">Entradas</p>
+          <p id="statEntries" class="text-xl sm:text-3xl font-black text-green-700 mt-1">—</p>
         </div>
-        <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
-          <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Salidas</p>
-          <p id="statExits" class="text-3xl font-black text-slate-700 mt-1">—</p>
+        <div class="rounded-2xl bg-white border border-slate-200 p-3 sm:p-5 shadow-sm">
+          <p class="text-[10px] sm:text-xs uppercase tracking-widest text-slate-500 font-semibold">Salidas</p>
+          <p id="statExits" class="text-xl sm:text-3xl font-black text-slate-700 mt-1">—</p>
         </div>
       </div>
 
       <!-- Tabla -->
       <div class="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden">
-        <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-slate-100">
+
+        <!-- Header tabla + filtros -->
+        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-4 border-b border-slate-100">
           <div>
             <p class="font-bold text-slate-900">Todos los Accesos</p>
             <p class="text-xs text-slate-400">Del más reciente al más antiguo</p>
           </div>
-          <div class="flex flex-wrap items-center gap-2">
-            <input id="filterUser" type="text" placeholder="Buscar usuario..." class="tbl-filter w-48" />
+          <div class="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:items-center sm:gap-2">
+            <input id="filterUser" type="text" placeholder="Buscar usuario..." class="tbl-filter sm:w-48" />
             <select id="filterAction" class="tbl-filter">
               <option value="todos">Todos</option>
               <option value="entrada">Entrada</option>
@@ -117,17 +188,18 @@
           </div>
         </div>
 
-        <div id="loadingState" class="flex items-center justify-center gap-3 py-16 text-slate-400">
+        <div id="loadingState" class="flex items-center justify-center gap-3 py-12 sm:py-16 text-slate-400">
           <div class="h-6 w-6 animate-spin rounded-full border-2 border-slate-300 border-b-amber-500"></div>
           <span class="text-sm font-medium">Cargando historial...</span>
         </div>
-        <div id="emptyState" class="hidden py-16 text-center">
-          <span class="material-symbols-outlined text-5xl text-slate-300">history_off</span>
+        <div id="emptyState" class="hidden py-12 sm:py-16 text-center">
+          <span class="material-symbols-outlined text-4xl sm:text-5xl text-slate-300">history_off</span>
           <p class="mt-2 text-sm text-slate-400">Sin registros que mostrar.</p>
         </div>
 
+        <!-- Tabla con clase admin-history -->
         <div class="overflow-x-auto">
-          <table class="w-full text-sm">
+          <table class="admin-history-table w-full text-sm">
             <thead>
               <tr class="border-b border-slate-100 bg-slate-50 text-left">
                 <th class="px-6 py-3 text-xs font-bold uppercase tracking-widest text-slate-400">Tipo</th>
@@ -141,12 +213,47 @@
           </table>
         </div>
 
-        <!-- Paginación -->
         <div id="paginationWrapper" class="flex items-center justify-center gap-1 py-4 border-t border-slate-100"></div>
       </div>
 
     </div>
   </main>
+
+  <!-- Drawer móvil -->
+  <script>
+    (function () {
+      const openBtn   = document.getElementById('mobileMenuBtn');
+      const closeBtn  = document.getElementById('mobileCloseBtn');
+      const drawer    = document.getElementById('mobileDrawer');
+      const backdrop  = document.getElementById('mobileBackdrop');
+
+      const open  = () => { drawer.classList.remove('hidden'); backdrop.classList.remove('hidden'); document.body.classList.add('drawer-open'); };
+      const close = () => { drawer.classList.add('hidden');    backdrop.classList.add('hidden');    document.body.classList.remove('drawer-open'); };
+
+      openBtn?.addEventListener('click', open);
+      closeBtn?.addEventListener('click', close);
+      backdrop?.addEventListener('click', close);
+
+      const sync = () => {
+        const nameDesktop = document.getElementById('userNameLabel');
+        const nameDrawer  = document.getElementById('drawerUserName');
+        if (nameDesktop && nameDrawer && nameDesktop.textContent.trim()) {
+          nameDrawer.textContent = nameDesktop.textContent;
+        }
+      };
+      const observer = new MutationObserver(sync);
+      const target = document.getElementById('userNameLabel');
+      if (target) observer.observe(target, { childList: true, characterData: true, subtree: true });
+
+      document.getElementById('logoutBtnMobile')?.addEventListener('click', () => {
+        document.getElementById('logoutBtn')?.click();
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024) close();
+      });
+    })();
+  </script>
 
   <script type="module" src="assets/js/adminAccesos.js"></script>
 </body>

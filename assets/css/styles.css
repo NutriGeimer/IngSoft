@@ -167,7 +167,7 @@ html { overflow-x: hidden; }
 
 .parking-page {
   padding: 2rem 1rem 3rem;
-  min-width: 90%;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -466,7 +466,6 @@ html { overflow-x: hidden; }
 
 body.drawer-open { overflow: hidden; }
 
-/* RESPONSIVE ADMIN — adiciones para móvil en páginas admin*/
 /* admin-parking-grid */
 @media (max-width: 992px) {
   .admin-parking-grid {
@@ -490,5 +489,45 @@ body.drawer-open { overflow: hidden; }
 @media (max-width: 380px) {
   .admin-parking-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* tbl-filter */
+@media (max-width: 639px) {
+  .tbl-filter {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 767px) {
+  .history-table,
+  .admin-history-table {
+    min-width: 0;
+  }
+  .history-table td,
+  .admin-history-table td {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* parking-page */
+@media (max-width: 640px) {
+  .parking-layout {
+    grid-template-columns: 1fr;
+  }
+  .parking-map-card,
+  .parking-summary-card {
+    padding: 1rem;
+  }
+}
+
+/* parking slot */
+@media (max-width: 480px) {
+  .slot {
+    min-height: 72px;
   }
 }

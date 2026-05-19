@@ -62,7 +62,7 @@
       </div>
 
       <!-- Nav DESKTOP -->
-      <div class="hidden lg:flex items-center gap-6">
+      <div class="hidden xl:flex items-center gap-6">
         <div class="flex items-center gap-8 mr-4">
           <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="dashboard.html">Dashboard</a>
           <a class="text-slate-600 font-medium hover:text-slate-900 transition-colors" href="historialAccesos.html">Historial de Accesos</a>
@@ -75,7 +75,7 @@
 
       <!-- Botón hamburguesa -->
       <button id="mobileMenuBtn"
-              class="md:hidden flex items-center justify-center w-10 h-10 rounded-lg
+              class="xl:hidden flex items-center justify-center w-10 h-10 rounded-lg
                      text-slate-700 hover:bg-slate-100 transition"
               aria-label="Abrir menú">
         <span class="material-symbols-outlined">menu</span>
@@ -83,10 +83,10 @@
     </header>
 
     <!-- Backdrop + drawer móvil -->
-    <div id="mobileBackdrop" class="mobile-backdrop hidden fixed inset-0 bg-black/40 z-40 lg:hidden"></div>
+    <div id="mobileBackdrop" class="mobile-backdrop hidden fixed inset-0 bg-black/40 z-40 xl:hidden"></div>
     <aside id="mobileDrawer"
            class="mobile-drawer hidden fixed top-0 right-0 h-full w-72 max-w-[80vw] bg-white z-50
-                  shadow-2xl md:hidden flex flex-col">
+                  shadow-2xl xl:hidden flex flex-col">
       <div class="flex items-center justify-between px-5 h-16 border-b border-slate-200">
         <span class="text-base font-black tracking-tighter text-slate-900">Menú</span>
         <button id="mobileCloseBtn"
@@ -123,7 +123,7 @@
 
     <main class="parking-page mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-10">
       <!-- Grid -->
-      <div class="grid gap-4 sm:gap-6 lg:grid-cols-[2.5fr_1fr]">
+      <div class="grid gap-4 sm:gap-6 xl:grid-cols-[2.5fr_1fr]">
 
         <section class="rounded-[1.25rem] sm:rounded-[1.5rem] bg-white border border-slate-200 p-4 sm:p-6 shadow-sm">
           <div class="mb-4 sm:mb-6 flex flex-col gap-2">
@@ -250,7 +250,7 @@
 
         // Cerrar drawer si se pasa a escritorio
         window.addEventListener('resize', () => {
-          if (window.innerWidth >= 1024) close();
+          if (window.innerWidth >= 1280) close();
         });
       })();
     </script>

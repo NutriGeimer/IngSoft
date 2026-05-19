@@ -48,14 +48,18 @@
       cursor: pointer;
       transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
       font-family: 'Inter', sans-serif;
+      min-height: 72px;
+      padding: 0.5rem;
     }
+    .admin-slot-number { font-weight: 700; font-size: 0.78rem; }
+    .admin-slot-status { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.03em; font-weight: 600; }
     @media (min-width: 993px) {
       .admin-slot {
         min-height: 80px;
         padding: 0.6rem;
       }
-      .admin-slot-number { font-weight: 700; font-size: 0.82rem; }
-      .admin-slot-status { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
+      .admin-slot-number { font-size: 0.82rem; }
+      .admin-slot-status { font-size: 0.72rem; letter-spacing: 0.04em; }
     }
     .admin-slot-number { font-weight: 700; }
     .admin-slot-status { text-transform: uppercase; letter-spacing: 0.04em; font-weight: 600; }
@@ -86,7 +90,7 @@
     </div>
 
     <!-- Nav DESKTOP -->
-    <div class="hidden lg:flex items-center gap-6">
+    <div class="hidden xl:flex items-center gap-6">
       <div class="flex items-center gap-6 mr-4">
         <a href="adminUsuarios.html" class="text-slate-600 font-medium hover:text-slate-900 transition-colors text-sm">Usuarios</a>
         <a href="adminAccesos.html"  class="text-slate-600 font-medium hover:text-slate-900 transition-colors text-sm">Accesos Global</a>
@@ -100,16 +104,16 @@
 
     <!-- Botón hamburguesa -->
     <button id="mobileMenuBtn"
-            class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg text-slate-700 hover:bg-slate-100 transition flex-shrink-0"
+            class="xl:hidden flex items-center justify-center w-10 h-10 rounded-lg text-slate-700 hover:bg-slate-100 transition flex-shrink-0"
             aria-label="Abrir menú">
       <span class="material-symbols-outlined">menu</span>
     </button>
   </header>
 
   <!-- Drawer + backdrop (admin) -->
-  <div id="mobileBackdrop" class="mobile-backdrop hidden fixed inset-0 bg-black/40 z-40 lg:hidden"></div>
+  <div id="mobileBackdrop" class="mobile-backdrop hidden fixed inset-0 bg-black/40 z-40 xl:hidden"></div>
   <aside id="mobileDrawer"
-         class="mobile-drawer hidden fixed top-0 right-0 h-full w-72 max-w-[80vw] bg-white z-50 shadow-2xl lg:hidden flex flex-col">
+         class="mobile-drawer hidden fixed top-0 right-0 h-full w-72 max-w-[80vw] bg-white z-50 shadow-2xl xl:hidden flex flex-col">
 
     <div class="flex items-center justify-between px-5 h-16 border-b border-slate-200">
       <div class="flex items-center gap-2">
@@ -169,7 +173,7 @@
       </div>
 
       <!-- Layout -->
-      <div class="grid gap-4 sm:gap-6 lg:grid-cols-[1fr_320px]">
+      <div class="grid gap-4 sm:gap-6 xl:grid-cols-[1fr_320px]">
 
         <!-- Mapa de cajones -->
         <section class="rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 shadow-sm">
@@ -258,7 +262,7 @@
       });
 
       window.addEventListener('resize', () => {
-        if (window.innerWidth >= 1024) close();
+        if (window.innerWidth >= 1280) close();
       });
     })();
   </script>

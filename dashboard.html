@@ -148,6 +148,20 @@
             <div class="relative group flex justify-center">
                 <div class="absolute -inset-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
                 <!--Boton QR-->
+             
+                <div id="alreadyInsideBanner" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded shadow-sm" role="alert">
+                    <div class="flex items-center">
+                        <span class="material-symbols-outlined mr-2">warning</span>
+                        <p class="font-bold">Acceso activo</p>
+                    </div>
+                    <p class="text-sm mt-1">Tu vehículo ya se encuentra dentro del estacionamiento. No puedes generar un nuevo código de entrada hasta registrar tu salida.</p>
+                </div>
+
+                <button id="openModal" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">qr_code_scanner</span>
+                    Generar Código de Entrada
+                </button>
+                
                 <button 
                     id="openModal"
                     class="relative w-full md:w-auto md:min-w-[400px] aspect-video bg-white border border-outline-variant rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center gap-6 p-xl"

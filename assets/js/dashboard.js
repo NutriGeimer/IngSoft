@@ -1,5 +1,6 @@
 import { db } from "./firebase-config.js";
 import { doc, setDoc, serverTimestamp, onSnapshot } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import {getUserAccessHistory} from "./historialAccesos.js";
 
 import { getAuth, onAuthStateChanged } from  "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
 import { getCurrentUserProfile, logoutUser, applyAdminRole, checkAdminCache } from "./auth.js";
@@ -17,18 +18,40 @@ const closeModal   = document.getElementById('closeModal');
 const modalOverlay = document.getElementById('modalOverlay');
 const qrContainer  = document.getElementById('qrcode');
 
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "login.html";
     return;
   }
-  //guardar usuario actual
+  
+  // Guardar usuario actual
   currentUser = user;
 
   const profile = await getCurrentUserProfile(user.uid);
   const userName = profile?.name || user.email || "Usuario";
   if (userNameLabel) userNameLabel.textContent = userName;
   applyAdminRole(profile?.role);
+
+  try {
+      const history = await getUserAccessHistory(user.uid);
+      
+      const isInside = history.length > 0 && history[0].action === "entrada";
+
+      const openModalBtn = document.getElementById('openModal');
+      const warningBanner = document.getElementById('alreadyInsideBanner');
+
+      if (isInside) {
+          warningBanner.classList.remove('hidden');
+          
+          openModalBtn.disabled = true;
+          openModalBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          openModalBtn.classList.remove('hover:bg-amber-600');
+          openModalBtn.innerText = "Acceso ya generado";
+      }
+  } catch (error) {
+      console.error("Error al verificar el estado de acceso:", error);
+  }
 });
 
 logoutBtn?.addEventListener('click', async () => {

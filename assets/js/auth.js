@@ -96,9 +96,35 @@ export function redirectToDashboardIfAuthenticated(redirectPath = "dashboard.htm
 }
  
 export async function logoutUser() {
+  sessionStorage.removeItem('bpAdmin');
   await signOut(auth);
 }
  
+function setAdminNavVisibility(isAdmin) {
+  const adminDesktop = document.getElementById('adminNavLink');
+  const adminMobile = document.getElementById('adminNavLinkMobile');
+
+  if (adminDesktop) {
+    if (isAdmin) {
+      adminDesktop.classList.remove('hidden');
+      adminDesktop.style.display = 'inline';
+    } else {
+      adminDesktop.classList.add('hidden');
+      adminDesktop.style.display = '';
+    }
+  }
+
+  if (adminMobile) {
+    if (isAdmin) {
+      adminMobile.classList.remove('hidden');
+      adminMobile.classList.add('flex');
+    } else {
+      adminMobile.classList.add('hidden');
+      adminMobile.classList.remove('flex');
+    }
+  }
+}
+
 export function applyAdminRole(role) {
   const isAdmin = role === "admin";
   if (isAdmin) {
@@ -106,18 +132,11 @@ export function applyAdminRole(role) {
   } else {
     sessionStorage.removeItem('bpAdmin');
   }
-  const link = document.getElementById('adminNavLink');
-  if (link && isAdmin) {
-    link.classList.remove('hidden');
-    link.style.display = 'inline';
-  }
+  setAdminNavVisibility(isAdmin);
 }
 
 export function checkAdminCache() {
-  if (sessionStorage.getItem('bpAdmin') === '1') {
-    const link = document.getElementById('adminNavLink');
-    if (link) { link.classList.remove('hidden'); link.style.display = 'inline'; }
-  }
+  setAdminNavVisibility(sessionStorage.getItem('bpAdmin') === '1');
 }
 
 export function requireAdmin(redirectPath = "dashboard.html") {

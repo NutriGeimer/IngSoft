@@ -1,6 +1,6 @@
 ﻿import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-import { collection, doc, getDocs, query, orderBy, updateDoc, serverTimestamp, writeBatch, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { collection, doc, getDocs, query, orderBy, updateDoc, serverTimestamp, writeBatch, onSnapshot, setDoc, getFirestore, getDoc } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 import { getCurrentUserProfile, logoutUser, applyAdminRole, checkAdminCache } from "./auth.js";
 import { logAccess } from "./historialAccesos.js";
 
@@ -326,11 +326,56 @@ function clearSelection() {
   renderMap();
 }
 
+const revisionQr = async() =>{
+  const usuario = auth.currentUser;
+
+  if (!usuario) {
+    alert("Debes iniciar sesión primero.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    //buscar el perfil del usuario em la base de datos
+    const userRef = doc(db, "users", usuario.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists()) {
+      const datosUsuario = userSnap.data();
+
+      //verificamos el permiso
+      if (datosUsuario.accesoValidadoAt) {
+        const ahora = new Date();
+        const horaEntrada = datosUsuario.accesoValidadoAt.toDate();
+        const minutosTranscurridos = (ahora - horaEntrada) / (1000 * 60);
+
+        if (minutosTranscurridos <= 10) { // limite de 10min
+
+          occupySelectedSpot();
+          await updateDoc(userRef, { accesoValidadoAt: null });
+
+        }else {
+          alert("Tu tiempo de acceso expiró (límite 10 min). Por favor, vuelve a escanear el QR.");
+          window.location.href = "dashboard.html";
+        }
+        
+      } else {
+        //si no escanea el qr o su pase vencio
+        alert("Acceso denegado: Primero debes escanear tu código QR de acceso en la entrada.");
+        window.location.href = "dashboard.html"; 
+      }
+    }
+  } catch (error) {
+    console.error("Error al procesar la reserva:", error);
+  }
+}
+
 const hideModal = () => modalQrSalida.classList.add('hidden');
 
 leaveButton?.addEventListener('click', handleLeaveButton);
 closeModal?.addEventListener('click', hideModal);
 cancelBtn?.addEventListener('click', hideModal);
-occupyButton.addEventListener('click', occupySelectedSpot);
+//occupyButton.addEventListener('click', occupySelectedSpot);
+occupyButton.addEventListener('click', revisionQr);
 resetButton.addEventListener('click', resetSpots);
 clearSelectionButton.addEventListener('click', clearSelection);

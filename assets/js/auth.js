@@ -38,6 +38,10 @@ export function setButtonLoading(button, isLoading, text, loadingText = "Procesa
 }
  
 export async function registerUser({ name, email, password, nplates }) {
+  if (!nplates || nplates.trim() === ""){
+    throw new Error("El numero de placa es obligatorio.");
+  }
+
   const credential = await createUserWithEmailAndPassword(auth, email, password);
   const user = credential.user;
 
@@ -45,7 +49,7 @@ export async function registerUser({ name, email, password, nplates }) {
     uid: user.uid,
     name,
     email,
-    nplates: nplates || "",
+    nplates: nplates.trim(),
     role: "user",
     createdAt: serverTimestamp()
   });

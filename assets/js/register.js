@@ -1,4 +1,6 @@
 import { hideAlert, showAlert, setButtonLoading, registerUser, getFirebaseErrorMessage } from "./auth.js"
+import { db } from "./firebase-config.js";
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
 const form=document.getElementById('registerForm')
 const nameInput=document.getElementById('name')
@@ -13,8 +15,6 @@ form?.addEventListener('submit', async (e)=>{
     e.preventDefault()
    
     hideAlert('registerAlert')
-   // successBox?.classList.add('d-none')
-   // successBox?.textContent=''
 
     const name= nameInput.value.trim() 
     const email= emailInput.value.trim()
@@ -22,12 +22,15 @@ form?.addEventListener('submit', async (e)=>{
     const password= passwordInput.value.trim() 
     const confirmPassword= confirmPasswordInput.value.trim() 
 
-    if(!name || !email || !password || !confirmPassword){
+    if(!name || !email || !password || !confirmPassword  || !nplates){
         showAlert('registerAlert', 'Todos los datos son onligatorios')
-            return
+        return
     }
 
-    //Agregar if para contraseña menor a 6 caracteres 
+    if (password.length < 6){
+        showAlert('registerAlert', 'La contraseña debe tener más de 6 caracteres')
+        return
+    }
 
 
     if(password !== confirmPassword){
@@ -35,20 +38,27 @@ form?.addEventListener('submit', async (e)=>{
         return    
     }
 
+    const q = query(collection(db, 'users'), where('nplates', '==',nplates))
+    const placaExistente = await getDocs(q)
+
+    if(!placaExistente.empty){
+        showAlert('registerAlert', 'Esta placa ya está registrada en el sistema')
+        return
+    }
   
 
     try {
-        setButtonLoading(registerBtn,true, '<i class="bi bi-person-check me-2"></i> crear cuenta', 
-            'creando cuenta'
+        setButtonLoading(
+            registerBtn,
+            true, 
+            '<i class="bi bi-person-check me-2"></i> Crear cuenta', 
+            'Creando cuenta'
         )
         await registerUser({name,email, password, nplates})
-       
-      // successBox?.textContent='cuenta creada correctamente'
-      // successBox?.classList.remove('d-none')
 
-       setTimeout(()=>{
-        window.location.href='./login.html'
-       }, 1200)
+        setTimeout(()=>{
+            window.location.href='./login.html'
+        }, 1200)
     
     }catch(error){
         showAlert('registerAlert', getFirebaseErrorMessage(error))
@@ -59,7 +69,6 @@ form?.addEventListener('submit', async (e)=>{
             'creando cuenta'
         )    
     }
-
 
     
 })

@@ -1,4 +1,4 @@
-import { db } from "./firebase-config.js";
+import { db, auth } from "./firebase-config.js";
 import {
     doc,
     getDoc,
@@ -28,6 +28,14 @@ async function validarToken() {
         if (docSnap.exists() && docSnap.data().active === true) {
             await updateDoc(docRef, { active: false, usedAt: serverTimestamp() });
             mostrarExito();
+
+            const usuarioActualId = auth.currentUser.uid; 
+            const userRef = doc(db, "users", usuarioActualId); 
+
+            //validar con éxito y guardar hora 
+            await updateDoc(userRef, { 
+                accesoValidadoAt: new Date() 
+            });
         } else {
             mostrarError("Este código ya fue usado o no existe");
         }

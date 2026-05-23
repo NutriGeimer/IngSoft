@@ -25,6 +25,17 @@ async function validarToken() {
                 usedAt: serverTimestamp(),
                 validatedFrom: "mobile"
             });
+
+            const userUid = docSnap.data().uid;
+            if (userUid) {
+                const userRef = doc(db, "users", userUid);
+                await updateDoc(userRef, {
+                    accesoValidadoAt: serverTimestamp()
+                });
+            } else {
+                console.warn('Token válido sin UID asociado');
+            }
+
             mostrarExito();
         } else {
             mostrarError("Este código ya fue usado o no existe");

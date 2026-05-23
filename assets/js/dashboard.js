@@ -47,6 +47,12 @@ const hideModal = () => {
 };
 
 const generateQR = async () => {
+    const user = currentUser || auth.currentUser;
+    if (!user) {
+        qrContainer.innerHTML = '<p class="text-red-500 text-sm text-center">No se encontró usuario autenticado.</p>';
+        return;
+    }
+
     const token = Math.random().toString(36).substring(2, 15);
     const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
     const url = `${base}validate.html?token=${token}`;
@@ -55,6 +61,8 @@ const generateQR = async () => {
         await setDoc(doc(db, "tokens_acceso", token), {
             active: true,
             createdAt: serverTimestamp(),
+            uid: user.uid,
+            email: user.email || null,
             url: url
         });
 

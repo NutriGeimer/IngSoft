@@ -1,6 +1,6 @@
 ﻿import { db, auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-import { collection, doc, getDocs, query, orderBy, updateDoc, serverTimestamp, writeBatch, onSnapshot, setDoc, getFirestore, getDoc  } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+import { collection, doc, getDocs, query, where, orderBy, updateDoc, serverTimestamp, writeBatch, onSnapshot, setDoc, getFirestore, getDoc  } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 import { getCurrentUserProfile, logoutUser, applyAdminRole, checkAdminCache } from "./auth.js";
 import { logAccess } from "./historialAccesos.js";
 
@@ -326,6 +326,22 @@ function clearSelection() {
   renderMap();
 }
 
+async function getRecentAccessToken(uid) {
+  const tokenQuery = query(
+    collection(db, "tokens_acceso"),
+    where("uid", "==", uid),
+    where("active", "==", false)
+  );
+
+  const snapshot = await getDocs(tokenQuery);
+  const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+
+  return snapshot.docs.find((docSnap) => {
+    const usedAt = docSnap.data().usedAt;
+    return usedAt && usedAt.toDate && usedAt.toDate() >= tenMinutesAgo;
+  }) || null;
+}
+
 const revisionQr = async() =>{
   const usuario = auth.currentUser;
 
@@ -340,33 +356,42 @@ const revisionQr = async() =>{
     const userRef = doc(db, "users", usuario.uid);
     const userSnap = await getDoc(userRef);
 
+    let validAccess = false;
+    let accessTimestamp = null;
+
     if (userSnap.exists()) {
       const datosUsuario = userSnap.data();
-
-      //verificamos el permiso
       if (datosUsuario.accesoValidadoAt) {
-        const ahora = new Date();
-        const horaEntrada = datosUsuario.accesoValidadoAt.toDate();
-        const minutosTranscurridos = (ahora - horaEntrada) / (1000 * 60);
-
-        if (minutosTranscurridos <= 10) { // limite de 10min
-
-          occupySelectedSpot();
-          await updateDoc(userRef, { accesoValidadoAt: null });
-
-        }else {
-          alert("Tu tiempo de acceso expiró (límite 10 min). Por favor, vuelve a escanear el QR.");
-          window.location.href = "dashboard.html";
-        }
-        
-      } else {
-        //si no escanea el qr o su pase vencio
-        alert("Acceso denegado: Primero debes escanear tu código QR de acceso en la entrada.");
-        window.location.href = "dashboard.html"; 
+        accessTimestamp = datosUsuario.accesoValidadoAt;
       }
+    }
+
+    if (accessTimestamp) {
+      const ahora = new Date();
+      const horaEntrada = accessTimestamp.toDate ? accessTimestamp.toDate() : new Date(accessTimestamp);
+      const minutosTranscurridos = (ahora - horaEntrada) / (1000 * 60);
+      validAccess = minutosTranscurridos <= 10;
+    }
+
+    if (!validAccess) {
+      const tokenDoc = await getRecentAccessToken(usuario.uid);
+      if (tokenDoc) {
+        validAccess = true;
+      }
+    }
+
+    if (validAccess) {
+      await occupySelectedSpot();
+      if (userSnap.exists()) {
+        await updateDoc(userRef, { accesoValidadoAt: null });
+      }
+    } else {
+      alert("Acceso denegado: Primero debes escanear tu código QR de acceso en la entrada.");
+      window.location.href = "dashboard.html";
     }
   } catch (error) {
     console.error("Error al procesar la reserva:", error);
+    alert("Ocurrió un error al validar el acceso. Intenta de nuevo.");
   }
 }
 

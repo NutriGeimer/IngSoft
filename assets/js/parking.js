@@ -361,6 +361,7 @@ const revisionQr = async() =>{
 
     if (userSnap.exists()) {
       const datosUsuario = userSnap.data();
+      
       if (datosUsuario.accesoValidadoAt) {
         accessTimestamp = datosUsuario.accesoValidadoAt;
       }

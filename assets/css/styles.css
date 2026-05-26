@@ -532,3 +532,32 @@ body.drawer-open { overflow: hidden; }
     min-height: 72px;
   }
 }
+
+/* ── Dashboard responsive ── */
+
+/* Móvil ≤ 639 px
+   - Reduce el padding interno del botón QR (32 px → 24 px) para dar
+     más holgura al contenido en teléfonos pequeños.
+   - Oculta el punto separador entre los badges: cuando los badges
+     envuelven a una segunda línea el punto queda huérfano en la primera. */
+@media (max-width: 639px) {
+  #openModal {
+    padding: 1.5rem;
+  }
+  .dash-separator {
+    display: none;
+  }
+}
+
+/* Tablet 768 – 1279 px
+   Con md:w-auto el botón colapsa a su min-width (~400 px), que es más
+   estrecho que en móvil/sm donde ocupa el 100 % del contenedor. El
+   selector de ID tiene mayor especificidad que la clase Tailwind, por lo
+   que width:100% sobreescribe md:w-auto sin necesitar !important. Así el
+   botón vuelve a ser de ancho completo y el aspect-ratio 16:9 mantiene
+   suficiente altura para el padding de 64 px + contenido. */
+@media (min-width: 768px) and (max-width: 1279px) {
+  #openModal {
+    width: 100%;
+  }
+}

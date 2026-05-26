@@ -1,37 +1,49 @@
-import { hideAlert, showAlert, setButtonLoading, loginUser, getFirebaseErrorMessage, observeAuth } from "./auth.js";
+import { hideAlert, showAlert, setButtonLoading, loginUser, observeAuth, getFirebaseErrorMessage } from "./auth.js"
 
-const form = document.getElementById('loginForm');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const loginBtn = document.getElementById('loginBtn');
+const form = document.getElementById('loginForm')
+const emailInput = document.getElementById('loginEmail')
+const passwordInput = document.getElementById('loginPassword')
+const loginBtn = document.getElementById('loginBtn')
 
-observeAuth((user) => {
-  if (user) {
-    window.location.href = './dashboard.html';
-  }
-});
+observeAuth((user)=>{
+    if(user){
+        window.location.href = './../../dashboard.html'
+    }
+})
 
-form?.addEventListener('submit', async (e) => {
-  e.preventDefault();
+form?.addEventListener('submit', async(e) => {
+    e.preventDefault() //para que no haga refresh la pagina
 
-  hideAlert('loginAlert');
+    hideAlert('loginAlert')
 
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
+    //.value optiene el valor, sin eso obtiene solo la etiqueta
+    const email = emailInput.value.trim() 
+    const password = passwordInput.value.trim()
 
-  if (!email || !password) {
-    showAlert('loginAlert', 'Por favor ingresa correo y contraseña.');
-    return;
-  }
+    if(!email || !password){
+        showAlert('loginAlert', 'Por favor, completa todos los campos')
+        return
+    }
 
-  setButtonLoading(loginBtn, true, '<i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión', 'Ingresando...');
+    try {
+        setButtonLoading(
+            loginBtn, 
+            true, 
+            'Iniciar Sesión', 'Iniciando Sesión'
+        )
+        await loginUser ({email, password})
+        window.location.href = './../../dashboard.html' //redirigir 
+        
+        
+    } catch (error) {
+        showAlert('loginAlert', getFirebaseErrorMessage(error))
+        
+    } finally {
+        setButtonLoading(
+            loginBtn, 
+            false, 
+            'Iniciar Sesión'
+        )
+    }
+})
 
-  try {
-    await loginUser({ email, password });
-    window.location.href = './dashboard.html';
-  } catch (error) {
-    showAlert('loginAlert', getFirebaseErrorMessage(error));
-  } finally {
-    setButtonLoading(loginBtn, false, '<i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión', 'Ingresando...');
-  }
-});

@@ -2,28 +2,28 @@ import { hideAlert, showAlert, setButtonLoading, registerUser, getFirebaseErrorM
 import { db } from "./firebase-config.js";
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
-const form=document.getElementById('registerForm')
-const nameInput=document.getElementById('name')
-const emailInput=document.getElementById('email')
-const plateInput=document.getElementById('plates')
-const passwordInput=document.getElementById('password')
-const confirmPasswordInput=document.getElementById('confirmPassword')
-const registerBtn= document.getElementById('registerBtn')
-const successBox=document.getElementById('registerSuccess')
+const form = document.getElementById('registerForm')
+const nameInput  = document.getElementById('name')
+const emailInput = document.getElementById('email')
+const plateInput = document.getElementById('plate')
+const passwordInput = document.getElementById('password')
+const confirmPasswordInput = document.getElementById('confirmPassword')
+const registerBtn = document.getElementById('registerBtn')
+const successBox = document.getElementById('registerSuccess')
 
 form?.addEventListener('submit', async (e)=>{
     e.preventDefault()
    
     hideAlert('registerAlert')
 
-    const name= nameInput.value.trim() 
-    const email= emailInput.value.trim()
-    const nplates=plateInput.value.trim() 
-    const password= passwordInput.value.trim() 
-    const confirmPassword= confirmPasswordInput.value.trim() 
+    const name = nameInput.value.trim() 
+    const email = emailInput.value.trim()
+    const nplates = plateInput.value.trim() 
+    const password = passwordInput.value.trim() 
+    const confirmPassword = confirmPasswordInput.value.trim() 
 
     if(!name || !email || !password || !confirmPassword  || !nplates){
-        showAlert('registerAlert', 'Todos los datos son onligatorios')
+        showAlert('registerAlert', 'Todos los datos son obligatorios')
         return
     }
 
@@ -51,8 +51,7 @@ form?.addEventListener('submit', async (e)=>{
         setButtonLoading(
             registerBtn,
             true, 
-            '<i class="bi bi-person-check me-2"></i> Crear cuenta', 
-            'Creando cuenta'
+            'Crear Cuenta', 'Creando Cuenta...'
         )
         await registerUser({name,email, password, nplates})
 
@@ -65,8 +64,10 @@ form?.addEventListener('submit', async (e)=>{
 
         }finally{
 
-            setButtonLoading(registerBtn,false, '<i class="bi bi-person-check me-2"></i> crear cuenta', 
-            'creando cuenta'
+            setButtonLoading(
+                registerBtn,
+                false,
+                'Crear Cuenta'
         )    
     }
 

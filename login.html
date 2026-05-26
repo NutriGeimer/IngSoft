@@ -1,86 +1,211 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BeeParking | Iniciar Sesión</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="/assets/css/styles.css">
-</head>
-<body class="auth-page">
-
-  <nav class="navbar navbar-expand-lg navbar-light bg-warning shadow-sm">
-    <div class="container">
-      <a class="navbar-brand fw-bold text-dark text-xl font-black tracking-tighter text-slate-900 dark:text-white" href="./dashboard.html">
-        BeeParking
-      </a>
-      <div class="d-flex align-items-center gap-2 ms-auto">
-        <span class="text-white small d-none d-md-inline">
-          <i class="bi bi-person-circle me-1"></i>
-          <span id="navUserName">Usuario</span>
-        </span>
-      </div>
-    </div>
-  </nav>
-
-  <main class="min-vh-100 d-flex align-items-center justify-content-center auth-wrapper">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-lg-10">
-          <div class="auth-card shadow-lg overflow-hidden">
-            <div class="row g-0 align-items-stretch">
-              <div class="col-md-6 auth-image-panel d-none d-md-flex flex-column justify-content-between p-4 text-white">
-                <div>
-                  <div class="brand-badge mb-4">B</div>
-                  <h2 class="display-6 fw-bold">BeeParking</h2>
-                  <p class="mb-0 text-white-75">La plataforma inteligente para el control de estacionamiento de las abejas.</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+        <title>Iniciar Sesión | BeeParking</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+        <script id="tailwind-config">
+                tailwind.config = {
+                    darkMode: "class",
+                    theme: {
+                        extend: {
+                            "colors": {
+                                "surface-dim": "#dadada",
+                                "tertiary-fixed": "#f4e2a9",
+                                "on-tertiary-fixed-variant": "#52461c",
+                                "on-tertiary-container": "#615529",
+                                "secondary": "#546067",
+                                "outline": "#827660",
+                                "primary-fixed": "#ffdf9e",
+                                "on-primary-container": "#6d5100",
+                                "on-tertiary-fixed": "#231b00",
+                                "on-primary-fixed": "#261a00",
+                                "tertiary": "#6b5e31",
+                                "inverse-on-surface": "#f1f1f1",
+                                "surface-container-high": "#e8e8e8",
+                                "on-secondary-fixed-variant": "#3c494f",
+                                "on-background": "#1a1c1c",
+                                "on-secondary-container": "#5a666d",
+                                "surface-container-highest": "#e2e2e2",
+                                "secondary-container": "#d7e4ec",
+                                "background": "#f9f9f9",
+                                "inverse-surface": "#2f3131",
+                                "primary": "#785900",
+                                "outline-variant": "#d4c5ab",
+                                "tertiary-fixed-dim": "#d7c690",
+                                "on-secondary": "#ffffff",
+                                "secondary-fixed-dim": "#bbc8d0",
+                                "error-container": "#ffdad6",
+                                "on-primary": "#ffffff",
+                                "inverse-primary": "#fabd00",
+                                "surface-tint": "#785900",
+                                "surface-container-low": "#f3f3f3",
+                                "primary-fixed-dim": "#fabd00",
+                                "on-tertiary": "#ffffff",
+                                "primary-container": "#ffc107",
+                                "surface-container-lowest": "#ffffff",
+                                "on-secondary-fixed": "#111d23",
+                                "surface-variant": "#e2e2e2",
+                                "on-surface-variant": "#4f4632",
+                                "error": "#ba1a1a",
+                                "on-error": "#ffffff",
+                                "surface-container": "#eeeeee",
+                                "tertiary-container": "#dcca94",
+                                "on-error-container": "#93000a",
+                                "surface-bright": "#f9f9f9",
+                                "on-surface": "#1a1c1c",
+                                "secondary-fixed": "#d7e4ec",
+                                "surface": "#f9f9f9",
+                                "on-primary-fixed-variant": "#5b4300"
+                            },
+                            "borderRadius": {
+                                "DEFAULT": "0.25rem",
+                                "lg": "0.5rem",
+                                "xl": "0.75rem",
+                                "full": "9999px"
+                            },
+                            "spacing": {
+                                "sm": "12px",
+                                "md": "24px",
+                                "gutter": "24px",
+                                "xl": "64px",
+                                "xs": "4px",
+                                "base": "8px",
+                                "lg": "40px",
+                                "margin": "32px"
+                            },
+                            "fontFamily": {
+                                "h3": ["Inter"],
+                                "body-lg": ["Inter"],
+                                "button": ["Inter"],
+                                "h2": ["Inter"],
+                                "label-caps": ["Inter"],
+                                "h1": ["Inter"],
+                                "body-md": ["Inter"],
+                                "body-sm": ["Inter"]
+                            },
+                            "fontSize": {
+                                "h3": ["24px", {"lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600"}],
+                                "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400"}],
+                                "button": ["16px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                                "h2": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                                "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                                "h1": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                                "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                                "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}]
+                            }
+                        },
+                    },
+                }
+            </script>
+        <style>
+                .material-symbols-outlined {
+                    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+                }
+                .login-elevation {
+                    box-shadow: 0 10px 20px -5px rgba(38, 50, 56, 0.08);
+                }
+            </style>
+    </head>
+    <body class="bg-surface font-body-md text-on-surface min-h-screen flex items-center justify-center p-gutter">
+      
+        <main class="w-full max-w-[1200px] grid grid-cols-1 md:grid-cols-2 bg-surface-container-lowest rounded-xl overflow-hidden login-elevation">
+            
+            <section class="hidden md:flex flex-col justify-between p-lg relative overflow-hidden bg-on-secondary-fixed text-white">
+                <div class="relative z-10">
+                    <div class="flex items-center gap-base mb-xl">
+                        <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">local_parking</span>
+                        </div>
+                        <span class="font-h3 text-h3 tracking-tighter text-white">BeeParking</span>
+                    </div>
+                    <h1 class="font-h1 text-h1 mb-md">Espacio eficiente. Ritmo profesional.</h1>
+                    <p class="font-body-lg text-body-lg text-secondary-fixed opacity-90 max-w-sm">
+                        Gestiona tu logística con la precisión de una colmena. Accede a tu panel de control para supervisar las operaciones en tiempo real.
+                    </p>
                 </div>
-                <div>
-                  <p class="mb-1 text-uppercase small letter-spacing text-white-75">Bienvenido de nuevo</p>
-                  <h3 class="h5 fw-bold">Elige tu cajón y disfruta</h3>
-                </div>
-              </div>
-              <div class="col-12 col-md-6 p-5 auth-form-panel bg-white">
-                <div class="text-center mb-4">
-                  <h1 class="h3 fw-bold mb-2">Inicia sesión</h1>
-                  <p class="text-secondary mb-0">Ingresa con tu correo y contraseña para acceder a BeeParking.</p>
+                <div class="relative z-10 mt-xl">
+                    <div class="flex items-center gap-sm">
+                        <span class="font-body-sm text-body-sm text-secondary-fixed">Un espacio seguro creado para la comodidad de la colmena.</span>
+                    </div>
                 </div>
 
-                <div id="loginAlert" class="alert alert-danger d-none" role="alert"></div>
+                
+                <div class="absolute inset-0 z-0">
+                    <img class="w-full h-full object-cover opacity-20 grayscale mix-blend-overlay" data-alt="abstract aerial view of organized multi-story parking structure with geometric shadows and minimalist architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw4RVw-9XLPUTdpn-gX8IbXSAsSg5qiZryXRLTh2UC_1cZoIySEuW8WChzW9JqdAcqF_Wq4ufm13HJeymLHiNmzqJIGwSZqb9svDSueiJfZSt2nyRYAkTUHGnwNUwqwvrsey6O7HvynN8Sr3DNCBa35FZRnr-bLmNxIjsGBYDdnfSzEDmCX0vT1WzIjXUx5kMwdwGEFRLXgaOwFDwWtEBChn-dwsSB6J5mnkunlPSCF_NINjWz8L3WUyM1gW8JCl5ljQBkUsFlCoY"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-on-secondary-fixed via-transparent to-transparent"></div>
+                </div>
+            </section>
 
-                <form id="loginForm" novalidate>
-                  <div class="mb-3">
-                    <label for="email" class="form-label">DIRECCIÓN DE EMAIL</label>
-                    <input type="email" class="form-control form-control-lg" id="email" placeholder="ejemplo@correo.com" required>
-                  </div>
+            
+            <section class="flex flex-col justify-center p-margin md:p-xl bg-surface-container-lowest">
+                <div class="max-w-md w-full mx-auto">
+                    <div class="md:hidden flex items-center gap-base mb-lg">
+                        <span class="material-symbols-outlined text-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">local_parking</span>
+                        <span class="font-h3 text-h3 tracking-tighter">BeeParking</span>
+                    </div>
+                    <div class="mb-lg">
+                        <h2 class="font-h2 text-h2 text-on-surface mb-xs">Bienvenido de vuelta</h2>
+                        <p class="font-body-md text-body-md text-secondary">Ingresa tus datos para iniciar sesión.</p>
+                    </div>
 
-                  <div class="mb-3">
-                    <label for="password" class="form-label">CONTRASEÑA</label>
-                    <input type="password" class="form-control form-control-lg" id="password" placeholder="Mínimo 6 caracteres" required>
-                  </div>
+                    <!-- Alerta-->
+                    <div id="loginAlert" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert"></div>
 
-                  <div class="d-grid mb-3">
-                    <button type="submit" id="loginBtn" class="btn btn-success btn-lg">
-                      <i class="bi bi-box-arrow-in-right me-2"></i>
-                      Iniciar sesión
-                    </button>
-                  </div>
+                    <form id="loginForm" novalidate class="space-y-md">
+                        
+                        <div>
+                            <label class="block font-label-caps text-label-caps text-on-surface-variant mb-xs" for="loginEmail">CORREO ELECTRÓNICO</label>
+                            <input 
+                                class="w-full px-md py-sm bg-white border border-outline-variant rounded-lg font-body-md text-on-surface placeholder:text-surface-dim focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary transition-all" 
+                                id="loginEmail" 
+                                name="email" 
+                                placeholder="axel@ugto.mx" 
+                                required
+                                type="email"
+                            />
+                        </div>
 
-                  <div class="text-center">
-                    <p class="mb-0 text-secondary">¿No tienes cuenta? <a href="./register.html" class="fw-semibold text-decoration-none">Regístrate aquí</a></p>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <p class="text-center text-muted mt-4 small">BeeParking - El estacionamiento de las abejas.</p>
-        </div>
-      </div>
-    </div>
-  </main>
+                        <!--Contraseña-->
+                        <div>
+                            <div class="flex justify-between items-center mb-xs">
+                                <label class="block font-label-caps text-label-caps text-on-surface-variant" for="loginPassword">CONTRASEÑA</label>
+                            </div>
+                            <div class="relative">
+                                <input 
+                                    class="w-full px-md py-sm bg-white border border-outline-variant rounded-lg font-body-md text-on-surface placeholder:text-surface-dim focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-primary transition-all" 
+                                    id="loginPassword" 
+                                    name="password" 
+                                    placeholder="••••••••" 
+                                    required 
+                                    type="password"
+                                />
+                            </div>
+                        </div>
 
-  <script type="module" src="./assets/js/login.js"></script>
-</body>
+                        <button id="loginBtn" class="w-full py-sm px-md bg-primary-container text-on-primary-container font-button text-button rounded-lg shadow-sm hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-xs" type="submit">
+                            Iniciar Sesión
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                        </button>
+                    </form>
+
+                    <p class="mt-lg text-center font-body-sm text-body-sm text-secondary">
+                        ¿No tienes cuenta?
+                        <a class="text-primary font-semibold hover:underline" href="./register.html">Regístrate</a>
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Support Link Footer -->
+        <footer class="fixed bottom-margin w-full text-center pointer-events-none">
+        <p class="font-label-caps text-label-caps text-surface-dim pointer-events-auto"> © 2026 BEEPARKING</p>
+        </footer>
+
+        <script type="module" src="./assets/js/login.js"></script>
+    </body>
 </html>

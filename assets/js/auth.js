@@ -19,13 +19,13 @@ export function showAlert(elementId, message) {
   const el = document.getElementById(elementId);
   if (!el) return;
   el.textContent = message;
-  el.classList.remove("d-none");
+  el.classList.remove("hidden");
 }
  
 export function hideAlert(elementId) {
   const el = document.getElementById(elementId);
   if (!el) return;
-  el.classList.add("d-none");
+  el.classList.add("hidden");
   el.textContent = "";
 }
  

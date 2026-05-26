@@ -1,117 +1,254 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BeeParking | Registro</title>
+<!DOCTYPE html>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="/assets/css/styles.css">
-  <style>
-    .form-control::placeholder {
-      color: #b0b7bf;
-      font-size: 0.85em;
-    }
-  </style>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Registrarse | BeeParking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-dim": "#dadada",
+                      "tertiary-fixed": "#f4e2a9",
+                      "on-tertiary-fixed-variant": "#52461c",
+                      "on-tertiary-container": "#615529",
+                      "secondary": "#546067",
+                      "outline": "#827660",
+                      "primary-fixed": "#ffdf9e",
+                      "on-primary-container": "#6d5100",
+                      "on-tertiary-fixed": "#231b00",
+                      "on-primary-fixed": "#261a00",
+                      "tertiary": "#6b5e31",
+                      "inverse-on-surface": "#f1f1f1",
+                      "surface-container-high": "#e8e8e8",
+                      "on-secondary-fixed-variant": "#3c494f",
+                      "on-background": "#1a1c1c",
+                      "on-secondary-container": "#5a666d",
+                      "surface-container-highest": "#e2e2e2",
+                      "secondary-container": "#d7e4ec",
+                      "background": "#f9f9f9",
+                      "inverse-surface": "#2f3131",
+                      "primary": "#785900",
+                      "outline-variant": "#d4c5ab",
+                      "tertiary-fixed-dim": "#d7c690",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#bbc8d0",
+                      "error-container": "#ffdad6",
+                      "on-primary": "#ffffff",
+                      "inverse-primary": "#fabd00",
+                      "surface-tint": "#785900",
+                      "surface-container-low": "#f3f3f3",
+                      "primary-fixed-dim": "#fabd00",
+                      "on-tertiary": "#ffffff",
+                      "primary-container": "#ffc107",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed": "#111d23",
+                      "surface-variant": "#e2e2e2",
+                      "on-surface-variant": "#4f4632",
+                      "error": "#ba1a1a",
+                      "on-error": "#ffffff",
+                      "surface-container": "#eeeeee",
+                      "tertiary-container": "#dcca94",
+                      "on-error-container": "#93000a",
+                      "surface-bright": "#f9f9f9",
+                      "on-surface": "#1a1c1c",
+                      "secondary-fixed": "#d7e4ec",
+                      "surface": "#f9f9f9",
+                      "on-primary-fixed-variant": "#5b4300"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "12px",
+                      "md": "24px",
+                      "gutter": "24px",
+                      "xl": "64px",
+                      "xs": "4px",
+                      "base": "8px",
+                      "lg": "40px",
+                      "margin": "32px"
+              },
+              "fontFamily": {
+                      "h3": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "button": ["Inter"],
+                      "h2": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "h1": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "h3": ["24px", {"lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "button": ["16px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                      "h2": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "h1": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bee-shadow-level-1 {
+            box-shadow: 0 2px 8px rgba(38, 50, 56, 0.04);
+        }
+        .bee-shadow-level-2 {
+            box-shadow: 0 10px 20px rgba(38, 50, 56, 0.08);
+        }
+    </style>
 </head>
-<body class="auth-page">
-
-
-  <!--Esta es la barra de menu-->
-  
-  <nav class="navbar navbar-expand-lg navbar-light bg-warning shadow-sm">
-    <div class="container">
-      <a class="navbar-brand fw-bold text-dark" href="./dashboard.html">
-        <i class="bi bi-buildings me-2"></i>
-        BeeParking
-      </a>
-
-      <div class="d-flex align-items-center gap-2 ms-auto">
-        <span class="text-white small d-none d-md-inline">
-          <i class="bi bi-person-circle me-1"></i>
-          <span id="navUserName">Usuario</span>
-        </span>
-      </div>
-    </div>
-  </nav>
-    <!--Fin barra de menu-->
-
-
-
-
-  <main class="min-vh-100 d-flex align-items-center justify-content-center auth-wrapper">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-lg-10">
-          <div class="auth-card shadow-lg overflow-hidden">
-            <div class="row g-0 align-items-stretch">
-              <div class="col-md-6 auth-image-panel d-none d-md-flex flex-column justify-content-between p-4 text-white">
-                <div>
-                  <div class="brand-badge mb-4">B</div>
-                  <h2 class="display-6 fw-bold">BeeParking</h2>
-                  <p class="mb-0 text-white-75">La plataforma inteligente para el control de estacionamiento de las abejas.</p>
-                </div>
-                <div>
-                  <p class="mb-1 text-uppercase small letter-spacing text-white-75">Estacionamiento seguro</p>
-                  <h3 class="h5 fw-bold">Elige tu cajón y disfruta</h3>
-                </div>
-              </div>
-              <div class="col-12 col-md-6 p-5 auth-form-panel bg-white">
-                <div class="text-center mb-4">
-                  <h1 class="h3 fw-bold mb-2">Crea tu cuenta</h1>
-                  <p class="text-secondary mb-0">Ingresa tus datos para iniciar BeeParking.</p>
-                </div>
-
-                <div id="registerAlert" class="alert alert-danger d-none" role="alert"></div>
-                <div id="registerSuccess" class="alert alert-success d-none" role="alert"></div>
-
-                <form id="registerForm" novalidate>
-                  <div class="mb-3">
-                    <label for="name" class="form-label">NOMBRE COMPLETO</label>
-                    <input type="text" class="form-control form-control-lg" id="name" placeholder="Andres Manuel Lopez" required>
-                  </div>
-
-                  <div class="mb-3">
-                    <label for="email" class="form-label">DIRECCIÓN DE EMAIL</label>
-                    <input type="email" class="form-control form-control-lg" id="email" placeholder="ejemplo@correo.com" required>
-                  </div>
-
-                  <div class="mb-3">
-                    <label for="plates" class="form-label">PLACAS VEHICULARES</label>
-                    <input type="text" class="form-control form-control-lg" id="plates" placeholder="Ej. GTF235F" required>
-                  </div>
-
-                  <div class="mb-3">
-                    <label for="password" class="form-label">CONTRASEÑA</label>
-                    <input type="password" class="form-control form-control-lg" id="password" placeholder="Mínimo 6 caracteres" required>
-                  </div>
-
-                  <div class="mb-3">
-                    <label for="confirmPassword" class="form-label">CONFIRMAR CONTRASEÑA</label>
-                    <input type="password" class="form-control form-control-lg" id="confirmPassword" placeholder="Repite tu contraseña" required>
-                  </div>
-
-                  <div class="d-grid mb-3">
-                    <button type="submit" id="registerBtn" class="btn btn-success btn-lg">
-                      <i class="bi bi-person-check me-2"></i>
-                      Crear cuenta
-                    </button>
-                  </div>
-
-                  <div class="text-center">
-                    <p class="mb-0 text-secondary">¿Ya tienes cuenta? <a id="linkLogin" href="./login.html" class="fw-semibold text-decoration-none">Inicia sesión</a></p>
-                  </div>
-                </form>
-              </div>
+    <body class="bg-surface font-body-md text-on-surface min-h-screen">
+        
+        <header class="sticky top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-white border-b border-slate-200 shadow-sm font-inter antialiased">
+            <div class="flex items-center gap-base">
+                <span class="material-symbols-outlined text-primary-container" style='font-variation-settings: "FILL" 1;'>local_parking</span>
+                <span class="text-xl font-black tracking-tighter text-slate-900">BeeParking</span>
             </div>
-          </div>
-          <p class="text-center text-muted mt-4 small">BeeParking - El estacionamiento de las abejas.</p>
-        </div>
-      </div>
-    </div>
-  </main>
+            <div class="hidden md:flex items-center gap-lg">
+                <a class="text-slate-600 font-medium hover:bg-slate-50 transition-colors px-3 py-1 rounded" href="login.html">Inicia sesión</a>
+                <a class="text-amber-600 font-bold border-b-2 border-amber-500 px-3 py-1" href="register.html">Únete Ahora</a>
+            </div>
+        </header>
+        <main class="w-full max-w-[1200px] grid grid-cols-1 md:grid-cols-2 bg-surface-container-lowest rounded-xl overflow-hidden bee-shadow-level-2 mx-auto my-xl">
+            
+            <section class="hidden md:flex flex-col justify-between p-lg relative overflow-hidden bg-on-secondary-fixed text-white">
+                <div class="relative z-10">
+                    <div class="flex items-center gap-base mb-xl">
+                        <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">local_parking</span>
+                        </div>
+                        <span class="font-h3 text-h3 tracking-tighter text-white">BeeParking</span>
+                    </div>
+                    <h1 class="font-h1 text-h1 mb-md">Espacio eficiente. Ritmo profesional.</h1>
+                    <p class="font-body-lg text-body-lg text-secondary-fixed opacity-90 max-w-sm">
+                                        La plataforma inteligente para el control de estacionamiento de las abejas.
+                    </p>
+                </div>
+                <div class="relative z-10 mt-xl">
+                    <div class="flex items-center gap-sm">
+                        <span class="font-body-sm text-body-sm text-secondary-fixed">Un espacio seguro creado para la comodidad de la colmena.</span>
+                    </div>
+                </div>
 
-  <script type="module" src="./assets/js/register.js"></script>
-</body>
+                
+                <div class="absolute inset-0 z-0">
+                    <img alt="Background" class="w-full h-full object-cover opacity-20 grayscale mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDw4RVw-9XLPUTdpn-gX8IbXSAsSg5qiZryXRLTh2UC_1cZoIySEuW8WChzW9JqdAcqF_Wq4ufm13HJeymLHiNmzqJIGwSZqb9svDSueiJfZSt2nyRYAkTUHGnwNUwqwvrsey6O7HvynN8Sr3DNCBa35FZRnr-bLmNxIjsGBYDdnfSzEDmCX0vT1WzIjXUx5kMwdwGEFRLXgaOwFDwWtEBChn-dwsSB6J5mnkunlPSCF_NINjWz8L3WUyM1gW8JCl5ljQBkUsFlCoY"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-on-secondary-fixed via-transparent to-transparent"></div>
+                </div>
+            </section>
+            
+            <section class="flex flex-col justify-center p-margin md:p-xl bg-surface-container-lowest">
+                <div class="w-full max-w-md mx-auto">
+                    <div class="mb-lg text-center lg:text-left">
+                        <h2 class="font-h2 text-h2 text-on-surface">Crea una cuenta.</h2>
+                        <p class="font-body-md text-secondary mt-xs">Ingresa tus datos y registrate en el estacionamiento de la colmena.</p>
+                    </div>
+
+                    <!--Alarmas-->
+                    <div id="registerAlert" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert"></div>
+                    <div id="registerSuccess" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert"></div>
+
+                    <form id="registerForm" novalidate class="space-y-md">
+                    
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider" for="name">NOMBRE COMPLETO</label>
+                            <div class="relative group">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">person</span>
+                                <input class="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container focus:border-primary transition-all outline-none font-body-md" 
+                                id="name" 
+                                placeholder="Andres Manuel Lopez" 
+                                required
+                                type="text"/>
+                            </div>
+                        </div>
+
+                        
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider" for="email">CORREO ELECTRÓNICO</label>
+                            <div class="relative group">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">mail</span>
+                                <input class="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container focus:border-primary transition-all outline-none font-body-md" 
+                                id="email" 
+                                placeholder="andres@ugto.mx" 
+                                required
+                                type="email"/>
+                            </div>
+                        </div>
+
+                        
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider" for="plate">PLACA DEL VEHÍCULO</label>
+                            <div class="relative group">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">directions_car</span>
+                                <input class="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container focus:border-primary transition-all outline-none font-body-md" 
+                                id="plate" 
+                                placeholder="ABC-1234" 
+                                required
+                                type="text"/>
+                            </div>
+                        </div>
+
+                        
+                        <div class="flex flex-col gap-xs">
+                            <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider" for="password">CONTRASEÑA</label>
+                            <div class="relative group">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock</span>
+                                <input class="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container focus:border-primary transition-all outline-none font-body-md" 
+                                id="password" 
+                                placeholder="••••••••" 
+                                required
+                                type="password"/>
+                            </div>
+                        </div>
+
+                        
+                    <div class="flex flex-col gap-xs">
+                        <label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider" for="password">CONFIRMAR CONTRASEÑA</label>
+                        <div class="relative group">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock</span>
+                            <input 
+                                class="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container focus:border-primary transition-all outline-none font-body-md" 
+                                id="confirmPassword" 
+                                placeholder="Repite tu contraseña" 
+                                required
+                                type="password"/>
+                        </div>
+                    </div>
+                        
+                        <!-- Submit Button -->
+                        <button id="registerBtn" class="w-full mt-lg bg-primary-container text-on-primary-container font-button py-4 rounded-lg bee-shadow-level-1 hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-sm" type="submit">
+                            <span>Crear Cuenta</span>
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                        </button>
+                    </form>
+                    <p class="mt-xl text-center text-body-sm text-secondary">
+                        ¿Ya tienes cuenta? 
+                        <a class="text-primary font-bold hover:underline" href="./login.html">Inicia Sesión</a>
+                    </p>
+                </div>
+            </section>
+        </main>
+        <!-- Footer Branding -->
+        <footer class="p-margin text-center">
+            <p class="text-label-caps text-surface-dim tracking-widest">© 2026 BEEPARKING</p>
+        </footer>
+
+        <script type="module" src="./assets/js/register.js"></script>
+    </body>
 </html>

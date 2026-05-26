@@ -232,5 +232,26 @@ async function releaseAll() {
   }
 }
 
+async function resetSpots() {
+  if (!confirm('¿Deseas reiniciar todos los estados y dejar los lugares libres? (No afecta cajones reservados por admin)')) return;
+  const batch = writeBatch(db);
+  spots.forEach((spot) => {
+    if (spot.reservedByAdmin) return;
+    batch.update(doc(db, SPOTS_COLLECTION, String(spot.id)), {
+      occupiedBy: null,
+      occupiedByUid: null,
+      updatedAt: serverTimestamp(),
+    });
+  });
+
+  try {
+    await batch.commit();
+  } catch (err) {
+    console.error("Error al reiniciar los estados:", err);
+    alert("No se pudo reiniciar los estados.");
+  }
+}
+
 document.getElementById("reserveBtn")?.addEventListener("click", reserveSelected);
 document.getElementById("releaseAllBtn")?.addEventListener("click", releaseAll);
+document.getElementById("resetButton")?.addEventListener("click", resetSpots);

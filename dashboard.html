@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/styles.css" />
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -113,13 +114,15 @@
 <body class="font-body-md text-on-surface">
 
     <!-- TopAppBar -->
-    <header class="sticky top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm font-inter antialiased">
-        <div class="flex items-center gap-4">
+    <header class="sticky top-0 w-full z-50 flex justify-between items-center px-4 sm:px-6 md:px-8 h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm antialiased">
+        <div class="flex items-center gap-2 sm:gap-4">
             <span class="material-symbols-outlined text-primary-container" style='font-variation-settings: "FILL" 1;'>local_parking</span>
-            <span class="text-xl font-black tracking-tighter text-slate-900 dark:text-white">BeeParking</span>
+            <span class="text-lg sm:text-xl font-black tracking-tighter text-slate-900 dark:text-white">BeeParking</span>
         </div>
-        <div class="flex items-center gap-6">
-            <div class="hidden md:flex items-center gap-8 mr-4">
+
+        <!-- Nav DESKTOP -->
+        <div class="hidden xl:flex items-center gap-6">
+            <div class="flex items-center gap-8 mr-4">
                 <a class="text-amber-600 dark:text-amber-400 font-bold border-b-2 border-amber-500" href="dashboard.html">Dashboard</a>
                 <a class="text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="historialAccesos.html">Historial de Accesos</a>
                 <a class="text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="parking.html">Mapa del Estacionamiento</a>
@@ -128,19 +131,73 @@
             <a id="userNameLabel" class="text-sm font-semibold text-slate-600 dark:text-slate-300" href="profile.html"></a>
             <button id="logoutBtn" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">Cerrar sesión</button>
         </div>
+
+        <!-- Botón hamburguesa -->
+        <button id="mobileMenuBtn"
+                class="xl:hidden flex items-center justify-center w-10 h-10 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                aria-label="Abrir menú">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
     </header>
 
+    <!-- Drawer + backdrop móvil -->
+    <div id="mobileBackdrop" class="mobile-backdrop hidden fixed inset-0 bg-black/40 z-40 xl:hidden"></div>
+    <aside id="mobileDrawer"
+           class="mobile-drawer hidden fixed top-0 right-0 h-full w-72 max-w-[80vw] bg-white dark:bg-slate-900 z-50 shadow-2xl xl:hidden flex flex-col">
+        <div class="flex items-center justify-between px-5 h-16 border-b border-slate-200">
+            <span class="text-base font-black tracking-tighter text-slate-900 dark:text-white">Menú</span>
+            <button id="mobileCloseBtn" class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 hover:bg-slate-100" aria-label="Cerrar menú">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <!-- Tarjeta de usuario -->
+        <a href="profile.html" class="flex items-center gap-3 mx-4 mt-4 px-3 py-3 rounded-xl bg-amber-50 border border-amber-100 hover:bg-amber-100 transition min-w-0">
+            <div class="w-9 h-9 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-[20px]">person</span>
+            </div>
+            <div class="flex flex-col min-w-0 flex-1">
+                <span class="text-[10px] font-bold text-amber-700 uppercase tracking-widest">Sesión activa</span>
+                <span id="drawerUserName" class="text-sm font-bold text-slate-900 truncate">Cargando...</span>
+            </div>
+        </a>
+
+        <nav class="flex-1 flex flex-col gap-1 p-4">
+            <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-50 text-amber-700 font-bold">
+                <span class="material-symbols-outlined text-[20px] text-amber-500">dashboard</span>Dashboard
+            </a>
+            <a href="historialAccesos.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 font-medium hover:bg-slate-100">
+                <span class="material-symbols-outlined text-[20px] text-slate-400">history</span>Historial de Accesos
+            </a>
+            <a href="parking.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 font-medium hover:bg-slate-100">
+                <span class="material-symbols-outlined text-[20px] text-slate-400">local_parking</span>Mapa del Estacionamiento
+            </a>
+            <a id="adminNavLinkMobile" href="adminUsuarios.html" class="hidden items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-100 text-amber-800 font-bold border-2 border-amber-400">
+                <span class="material-symbols-outlined text-[20px]">shield_person</span>Panel Admin
+            </a>
+            <a href="profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 font-medium hover:bg-slate-100 mt-2 border-t border-slate-100 pt-4">
+                <span class="material-symbols-outlined text-[20px] text-slate-400">manage_accounts</span>Mi perfil
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-slate-100">
+            <button id="logoutBtnMobile" class="w-full rounded-full border border-slate-300 px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">
+                Cerrar sesión
+            </button>
+        </div>
+    </aside>
+
     <!-- Main Canvas -->
-    <main class="flex-1 flex flex-col items-center justify-center p-margin bg-background relative overflow-hidden">
+    <main class="flex-1 flex flex-col items-center justify-center px-4 py-10 sm:p-margin bg-background relative overflow-hidden min-h-[calc(100vh-4rem)]">
         <!-- Abstract background decorative elements -->
         <div class="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
             <div class="absolute top-10 right-10 w-64 h-64 bg-primary-container rounded-full blur-3xl"></div>
             <div class="absolute bottom-10 left-10 w-96 h-96 bg-secondary-container rounded-full blur-3xl"></div>
         </div>
         <div class="max-w-2xl w-full text-center z-10">
-            <div class="mb-lg space-y-4">
-                <h2 class="font-h1 text-h1 text-on-background">Listo para emitir.</h2>
-                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-md mx-auto">
+            <div class="mb-8 sm:mb-lg space-y-3 sm:space-y-4">
+                <h2 class="font-h1 text-[26px] leading-tight sm:text-h1 text-on-background">Listo para emitir.</h2>
+                <p class="text-sm sm:font-body-lg sm:text-body-lg text-on-surface-variant max-w-md mx-auto">
                     Genera un código QR de estacionamiento seguro para acceder al nodo de inmediato.
                 </p>
             </div>
@@ -148,20 +205,20 @@
             <div class="relative group flex justify-center">
                 <div class="absolute -inset-1 bg-gradient-to-r from-amber-400 to-amber-600 rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
                 <!--Boton QR-->
-                <button 
+                <button
                     id="openModal"
-                    class="relative w-full md:w-auto md:min-w-[400px] aspect-video bg-white border border-outline-variant rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center gap-6 p-xl"
-                    type = "button"
-                > 
-                    <div class="w-24 h-24 bg-primary-container rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-500">
-                        <span 
-                            class="material-symbols-outlined text-5xl text-on-primary-container" 
-                            data-icon="qr_code_scanner" 
+                    class="relative w-full md:w-auto md:min-w-[400px] min-h-[200px] sm:aspect-video bg-white border border-outline-variant rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-center gap-4 sm:gap-6 p-8 sm:p-xl"
+                    type="button"
+                >
+                    <div class="w-20 h-20 sm:w-24 sm:h-24 bg-primary-container rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-500">
+                        <span
+                            class="material-symbols-outlined text-4xl sm:text-5xl text-on-primary-container"
+                            data-icon="qr_code_scanner"
                             style="font-variation-settings: 'FILL' 0, 'wght' 300;">qr_code_scanner
                         </span>
                     </div>
                     <div class="space-y-1">
-                        <span class="font-h3 text-h3 text-on-background block">Generar Código QR</span>
+                        <span class="font-h3 text-[20px] sm:text-h3 text-on-background block">Generar Código QR</span>
                         <span class="font-label-caps text-label-caps text-slate-500 uppercase">Validación instantánea habilitada</span>
                     </div>
                 </button>
@@ -188,12 +245,12 @@
             </div>
             </div>
 
-            <div class="mt-xl flex items-center justify-center gap-gutter text-slate-400">
+            <div class="mt-8 sm:mt-xl flex items-center justify-center gap-4 sm:gap-gutter text-slate-400 flex-wrap">
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm" data-icon="verified_user">verified_user</span>
                     <span class="font-body-sm text-body-sm">Cifrado Seguro</span>
                 </div>
-                <div class="w-1 h-1 bg-slate-300 rounded-full"></div>
+                <div class="dash-separator w-1 h-1 bg-slate-300 rounded-full"></div>
                 <div class="flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm" data-icon="bolt">bolt</span>
                     <span class="font-body-sm text-body-sm">Sincronización instantánea</span>
@@ -206,5 +263,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <script type="module" src="./assets/js/dashboard.js"></script>
+
+    <!-- Drawer móvil script -->
+    <script>
+        (function () {
+            const openBtn  = document.getElementById('mobileMenuBtn');
+            const closeBtn = document.getElementById('mobileCloseBtn');
+            const drawer   = document.getElementById('mobileDrawer');
+            const backdrop = document.getElementById('mobileBackdrop');
+
+            const open  = () => { drawer.classList.remove('hidden'); backdrop.classList.remove('hidden'); document.body.classList.add('drawer-open'); };
+            const close = () => { drawer.classList.add('hidden');    backdrop.classList.add('hidden');    document.body.classList.remove('drawer-open'); };
+
+            openBtn?.addEventListener('click', open);
+            closeBtn?.addEventListener('click', close);
+            backdrop?.addEventListener('click', close);
+
+            const sync = () => {
+                const nameDesktop = document.getElementById('userNameLabel');
+                const nameDrawer  = document.getElementById('drawerUserName');
+                if (nameDesktop && nameDrawer && nameDesktop.textContent.trim()) {
+                    nameDrawer.textContent = nameDesktop.textContent;
+                }
+                const adminDesktop = document.getElementById('adminNavLink');
+                const adminMobile  = document.getElementById('adminNavLinkMobile');
+                if (adminDesktop && adminMobile && !adminDesktop.classList.contains('hidden')) {
+                    adminMobile.classList.remove('hidden');
+                    adminMobile.classList.add('flex');
+                }
+            };
+
+            const observer = new MutationObserver(sync);
+            const target = document.getElementById('userNameLabel');
+            if (target) observer.observe(target, { childList: true, characterData: true, subtree: true });
+            const adminTarget = document.getElementById('adminNavLink');
+            if (adminTarget) observer.observe(adminTarget, { attributes: true, attributeFilter: ['class'] });
+
+            document.getElementById('logoutBtnMobile')?.addEventListener('click', () => {
+                document.getElementById('logoutBtn')?.click();
+            });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 1280) close();
+            });
+        })();
+    </script>
 </body>
 </html>

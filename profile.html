@@ -7,18 +7,47 @@
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-    
-    <script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
             colors: {
-              "primary": "#785900",
-              "on-surface": "#1a1c1c",
+                "surface-dim": "#dadada", "secondary": "#546067", "outline": "#827660",
+                "on-primary-container": "#6d5100", "surface-container-high": "#e8e8e8",
+                "on-background": "#1a1c1c", "surface-container-highest": "#e2e2e2",
+                "secondary-container": "#d7e4ec", "background": "#f9f9f9",
+                "primary": "#785900", "outline-variant": "#d4c5ab",
+                "on-secondary": "#ffffff", "on-primary": "#ffffff",
+                "inverse-primary": "#fabd00", "surface-container-low": "#f3f3f3",
+                "on-tertiary": "#ffffff", "primary-container": "#ffc107",
+                "surface-container-lowest": "#ffffff",
+                "surface-variant": "#e2e2e2", "on-surface-variant": "#4f4632",
+                "error": "#ba1a1a", "surface-container": "#eeeeee",
+                "on-surface": "#1a1c1c", "surface": "#f9f9f9",
+            },
+            fontFamily: {
+                "h3":["Inter"],"body-lg":["Inter"],"button":["Inter"],
+                "h2":["Inter"],"label-caps":["Inter"],"h1":["Inter"],
+                "body-md":["Inter"],"body-sm":["Inter"]
+            },
+            fontSize: {
+                "h3":        ["24px",{"lineHeight":"32px","fontWeight":"600"}],
+                "body-lg":   ["18px",{"lineHeight":"28px","fontWeight":"400"}],
+                "button":    ["16px",{"lineHeight":"24px","letterSpacing":"0.01em","fontWeight":"600"}],
+                "h2":        ["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],
+                "label-caps":["12px",{"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"700"}],
+                "h1":        ["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"700"}],
+                "body-md":   ["16px",{"lineHeight":"24px","fontWeight":"400"}],
+                "body-sm":   ["14px",{"lineHeight":"20px","fontWeight":"400"}]
             }
-          }
-        }
+          },
+        },
       }
     </script>
 
@@ -26,96 +55,482 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         body { background-color: #f9f9f9; font-family: 'Inter', sans-serif; }
-        .profile-header { background-color: #ffc107; height: 120px; border-radius: 0.5rem 0.5rem 0 0; }
-        .profile-avatar { width: 100px; height: 100px; border: 4px solid white; margin-top: -50px; background-color: white; }
+
+        .profile-banner {
+            height: 110px;
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 60%, #ff8f00 100%);
+            border-radius: 1rem 1rem 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .profile-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .profile-avatar-wrap {
+            margin-top: -52px;
+            position: relative;
+            z-index: 1;
+        }
+        .profile-avatar-img {
+            width: 104px;
+            height: 104px;
+            border: 4px solid #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            object-fit: cover;
+        }
+        .info-chip {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.75rem 1rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.85rem;
+            transition: border-color 0.15s;
+        }
+        .info-chip:hover { border-color: #ffc107; }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.85rem;
+            padding: 0.9rem 1rem;
+            text-align: center;
+            transition: box-shadow 0.15s, transform 0.15s;
+        }
+        .stat-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
         /* Evitar que Tailwind interfiera con los modales de Bootstrap */
         .modal-backdrop { z-index: 1040 !important; }
         .modal { z-index: 1050 !important; }
+
+        /* ── Inputs del modal ── */
+    .profile-input {
+      border-radius: 0.75rem !important;
+      border: 1.5px solid #e2e8f0 !important;
+      padding: 0.7rem 1rem !important;
+      font-size: 0.95rem !important;
+      transition: border-color 0.15s, box-shadow 0.15s !important;
+    }
+    .profile-input:focus {
+      border-color: #ffc107 !important;
+      box-shadow: 0 0 0 3px rgba(255,193,7,0.18) !important;
+      outline: none !important;
+    }
+    .profile-input:disabled { background: #f1f5f9 !important; color: #94a3b8 !important; }
+
+    /* ── Toast de éxito ── */
+    #successToast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 9999;
+      min-width: 240px;
+      border-radius: 0.85rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+      transform: translateY(120%);
+      transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.35s;
+      opacity: 0;
+    }
+    #successToast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ── Responsive tweaks ── */
+    @media (max-width: 575px) {
+      .profile-banner { height: 88px; }
+      .profile-avatar-img { width: 88px; height: 88px; }
+      .profile-avatar-wrap { margin-top: -44px; }
+    }
     </style>
 </head>
 
-<body class="text-on-surface">
+<body class="font-body-md text-on-surface">
 
-    <header class="sticky top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm antialiased">
-        <div class="flex items-center gap-4">
-            <span class="text-xl font-black tracking-tighter text-slate-900 dark:text-white">BeeParking</span>
-        </div>
-        <div class="flex items-center gap-6">
-            <div class="hidden md:flex items-center gap-8 mr-4">
-                <a class="text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors no-underline" href="dashboard.html">Dashboard</a>
-                <a class="text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors no-underline" href="historialAccesos.html">Historial de Accesos</a>
-                <a class="text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors no-underline" href="parking.html">Mapa del Estacionamiento</a>
-                <a id="adminNavLink" href="adminUsuarios.html" class="hidden font-bold text-sm bg-amber-100 text-amber-800 border-2 border-amber-400 rounded-full px-4 py-1 hover:bg-amber-500 hover:text-white hover:border-amber-500 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150 no-underline">Panel Admin</a>
-            </div>
-            <span id="userNameLabel" class="text-amber-600 dark:text-amber-400 font-bold border-b-2 border-amber-500 no-underline"></span>
-            <button id="logoutBtn" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">Cerrar sesión</button>
-        </div>
-    </header>
-
-    <main class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-8 col-lg-6">
-                <div class="card shadow-sm border-0 rounded-3">
-                    <div class="profile-header"></div>
-                    <div class="card-body text-center pb-4">
-                        <img src="https://ui-avatars.com/api/?name=Usuario&background=ffc107&color=000&size=100" alt="Avatar" class="profile-avatar rounded-circle shadow-sm mb-3" id="profileAvatar">
-                        
-                        <h2 class="h4 fw-bold mb-1" id="displayName">Cargando...</h2>
-                        <p class="text-secondary mb-4" id="displayEmail">cargando@email.com</p>
-                        
-                        <hr class="w-75 mx-auto text-muted">
-                        
-                        <div class="row text-start mt-4 mb-4 px-4">
-                            <div class="col-12 mb-3">
-                                <p class="text-uppercase text-muted small fw-bold mb-1">Placas Vehiculares</p>
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-car-front-fill text-warning fs-5 me-2"></i>
-                                    <span class="fs-5 fw-medium text-dark" id="displayPlates">Sin registrar</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-warning px-4 rounded-pill fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                            <i class="bi bi-pencil-square me-2"></i>Editar Perfil
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-light border-0">
-                    <h5 class="modal-title fw-bold">Editar Información</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <form id="editProfileForm">
-                        <div class="mb-3 text-start">
-                            <label for="editName" class="form-label fw-semibold text-secondary small">NOMBRE COMPLETO</label>
-                            <input type="text" class="form-control form-control-lg" id="editName" required>
-                        </div>
-                        <div class="mb-3 text-start">
-                            <label for="editEmail" class="form-label fw-semibold text-secondary small">DIRECCIÓN DE EMAIL</label>
-                            <input type="email" class="form-control form-control-lg" id="editEmail" readonly disabled>
-                        </div>
-                        <div class="mb-4 text-start">
-                            <label for="editPlates" class="form-label fw-semibold text-secondary small">PLACAS VEHICULARES</label>
-                            <input type="text" class="form-control form-control-lg" id="editPlates">
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" id="editProfileBtn" class="btn btn-success btn-lg fw-bold">Guardar Cambios</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+  <!-- ══════════════ HEADER ══════════════ -->
+  <header class="sticky top-0 w-full z-50 flex justify-between items-center px-4 sm:px-6 md:px-8 h-16
+                 bg-white border-b border-slate-200 shadow-sm antialiased">
+    <div class="flex items-center gap-2 sm:gap-4">
+      <span class="material-symbols-outlined text-primary-container" style='font-variation-settings:"FILL" 1'>local_parking</span>
+      <span class="text-lg sm:text-xl font-black tracking-tighter text-slate-900">BeeParking</span>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="./assets/js/profile.js"></script>
+    <!-- Nav DESKTOP -->
+    <div class="hidden xl:flex items-center gap-6">
+      <div class="flex items-center gap-8 mr-4">
+        <a href="dashboard.html"        class="text-slate-600 font-medium hover:text-primary transition-colors no-underline">Dashboard</a>
+        <a href="historialAccesos.html" class="text-slate-600 font-medium hover:text-primary transition-colors no-underline">Historial de Accesos</a>
+        <a href="parking.html"          class="text-slate-600 font-medium hover:text-primary transition-colors no-underline">Mapa del Estacionamiento</a>
+        <a id="adminNavLink" href="adminUsuarios.html"
+           class="hidden font-bold text-sm bg-amber-100 text-amber-800 border-2 border-amber-400 rounded-full px-4 py-1
+                  hover:bg-amber-500 hover:text-white hover:border-amber-500 hover:-translate-y-0.5 hover:shadow-md
+                  transition-all duration-150 no-underline">Panel Admin</a>
+      </div>
+      <!-- nombre activo resaltado (es la página de perfil) -->
+      <a id="userNameLabel" class="text-amber-600 font-bold border-b-2 border-amber-500 no-underline text-sm" href="profile.html"></a>
+      <button id="logoutBtn"
+              class="rounded-full border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">
+        Cerrar sesión
+      </button>
+    </div>
+
+    <!-- Botón hamburguesa MÓVIL -->
+    <button id="mobileMenuBtn"
+            class="xl:hidden flex items-center justify-center w-10 h-10 rounded-lg text-slate-700 hover:bg-slate-100 transition"
+            aria-label="Abrir menú">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+  </header>
+
+  <!-- ══════════════ DRAWER MÓVIL ══════════════ -->
+  <div id="mobileBackdrop" class="mobile-backdrop hidden fixed inset-0 bg-black/40 z-40 xl:hidden"></div>
+  <aside id="mobileDrawer"
+         class="mobile-drawer hidden fixed top-0 right-0 h-full w-72 max-w-[80vw] bg-white z-50 shadow-2xl xl:hidden flex flex-col">
+    <div class="flex items-center justify-between px-5 h-16 border-b border-slate-200">
+      <span class="text-base font-black tracking-tighter text-slate-900">Menú</span>
+      <button id="mobileCloseBtn"
+              class="flex items-center justify-center w-9 h-9 rounded-lg text-slate-600 hover:bg-slate-100"
+              aria-label="Cerrar menú">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- Tarjeta usuario drawer -->
+    <a href="profile.html"
+       class="flex items-center gap-3 mx-4 mt-4 px-3 py-3 rounded-xl bg-amber-50 border border-amber-100
+              hover:bg-amber-100 transition min-w-0 no-underline">
+      <div class="w-9 h-9 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center flex-shrink-0">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+      </div>
+      <div class="flex flex-col min-w-0 flex-1">
+        <span class="text-[10px] font-bold text-amber-700 uppercase tracking-widest">Sesión activa</span>
+        <span id="drawerUserName" class="text-sm font-bold text-slate-900 truncate">Cargando...</span>
+      </div>
+    </a>
+
+    <nav class="flex-1 flex flex-col gap-1 p-4">
+      <a href="dashboard.html"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 font-medium hover:bg-slate-100 no-underline">
+        <span class="material-symbols-outlined text-[20px] text-slate-400">dashboard</span>Dashboard
+      </a>
+      <a href="historialAccesos.html"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 font-medium hover:bg-slate-100 no-underline">
+        <span class="material-symbols-outlined text-[20px] text-slate-400">history</span>Historial de Accesos
+      </a>
+      <a href="parking.html"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-700 font-medium hover:bg-slate-100 no-underline">
+        <span class="material-symbols-outlined text-[20px] text-slate-400">local_parking</span>Mapa del Estacionamiento
+      </a>
+      <a id="adminNavLinkMobile" href="adminUsuarios.html"
+         class="hidden items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-100 text-amber-800 font-bold border-2 border-amber-400 no-underline">
+        <span class="material-symbols-outlined text-[20px]">shield_person</span>Panel Admin
+      </a>
+      <!-- Perfil activo en el drawer -->
+      <a href="profile.html"
+         class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-amber-50 text-amber-700 font-bold mt-2 border-t border-slate-100 pt-4 no-underline">
+        <span class="material-symbols-outlined text-[20px] text-amber-500">manage_accounts</span>Mi perfil
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-slate-100">
+      <button id="logoutBtnMobile"
+              class="w-full rounded-full border border-slate-300 px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 transition">
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════ MAIN ══════════════ -->
+  <main class="min-h-screen bg-background px-4 pb-12">
+
+    <!-- Fondo decorativo -->
+    <div class="fixed inset-0 opacity-5 pointer-events-none -z-0">
+      <div class="absolute top-10 right-10 w-64 h-64 bg-primary-container rounded-full blur-3xl"></div>
+      <div class="absolute bottom-10 left-10 w-96 h-96 bg-secondary-container rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto">
+
+      <!-- Título de sección -->
+      <div class="mt-6 mb-6">
+        <h1 class="text-[26px] sm:text-h1 font-bold text-on-background leading-tight">Mi Perfil</h1>
+        <p class="text-sm sm:text-body-md text-on-surface-variant mt-1">
+          Administra tu información personal y datos de acceso.
+        </p>
+      </div>
+
+      <!-- Grid: tarjeta perfil + panel lateral -->
+      <div class="grid gap-5 lg:grid-cols-[1fr_300px] items-start">
+
+        <!-- ── Tarjeta principal de perfil ── -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+
+          <!-- Banner -->
+          <div class="profile-banner"></div>
+
+          <!-- Cuerpo de la tarjeta -->
+          <div class="px-5 sm:px-7 pb-7">
+
+            <!-- Avatar + nombre + email -->
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+              <div class="flex flex-col sm:flex-row sm:items-end gap-4">
+                <div class="profile-avatar-wrap self-center sm:self-auto">
+                  <img id="profileAvatar"
+                       src="https://ui-avatars.com/api/?name=Usuario&background=ffc107&color=000&size=104"
+                       alt="Avatar"
+                       class="profile-avatar-img rounded-circle" />
+                </div>
+                <div class="text-center sm:text-left pb-1">
+                  <h2 class="text-xl sm:text-2xl font-bold text-slate-900 leading-tight" id="displayName">Cargando...</h2>
+                  <p class="text-sm text-slate-500 mt-0.5" id="displayEmail">cargando@email.com</p>
+                  <span class="inline-flex items-center gap-1 mt-1.5 text-[11px] font-bold text-amber-700
+                               bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5">
+                    <span class="material-symbols-outlined text-[13px]" style='font-variation-settings:"FILL" 1'>verified</span>
+                    Usuario verificado
+                  </span>
+                </div>
+              </div>
+
+              <!-- Botón editar (desktop) -->
+              <button type="button"
+                      data-bs-toggle="modal" data-bs-target="#editProfileModal"
+                      class="hidden sm:flex items-center gap-2 self-end mb-1 px-4 py-2 rounded-xl
+                             bg-amber-400 hover:bg-amber-500 text-white font-semibold text-sm
+                             shadow-sm transition-all active:scale-95">
+                <span class="material-symbols-outlined text-[18px]">edit</span>
+                Editar perfil
+              </button>
+            </div>
+
+            <hr class="my-5 border-slate-100" />
+
+            <!-- Info chips -->
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Información personal</p>
+            <div class="grid sm:grid-cols-2 gap-3">
+
+              <!-- Email -->
+              <div class="info-chip">
+                <span class="material-symbols-outlined text-amber-500 text-[20px]" style='font-variation-settings:"FILL" 1'>mail</span>
+                <div class="min-w-0">
+                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Email</p>
+                  <p class="text-sm font-semibold text-slate-800 truncate" id="displayEmailChip">—</p>
+                </div>
+              </div>
+
+              <!-- Placas -->
+              <div class="info-chip">
+                <span class="material-symbols-outlined text-amber-500 text-[20px]" style='font-variation-settings:"FILL" 1'>directions_car</span>
+                <div class="min-w-0">
+                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Placas vehiculares</p>
+                  <p class="text-sm font-semibold text-slate-800 truncate" id="displayPlates">Sin registrar</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Botón editar (móvil, ancho completo) -->
+            <button type="button"
+                    data-bs-toggle="modal" data-bs-target="#editProfileModal"
+                    class="sm:hidden w-full mt-5 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
+                           bg-amber-400 hover:bg-amber-500 text-white font-semibold text-sm
+                           shadow-sm transition-all active:scale-95">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+              Editar perfil
+            </button>
+
+          </div>
+        </div>
+
+        <!-- ── Panel lateral: estadísticas / accesos rápidos ── -->
+        <div class="flex flex-col gap-4">
+
+          <!-- Accesos rápidos -->
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Accesos rápidos</p>
+            <div class="flex flex-col gap-2">
+              <a href="dashboard.html"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-100
+                        text-slate-700 font-medium hover:bg-amber-50 hover:border-amber-200 hover:text-amber-700
+                        transition-all no-underline text-sm">
+                <span class="material-symbols-outlined text-[19px] text-slate-400">dashboard</span>
+                Dashboard
+              </a>
+              <a href="historialAccesos.html"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-100
+                        text-slate-700 font-medium hover:bg-amber-50 hover:border-amber-200 hover:text-amber-700
+                        transition-all no-underline text-sm">
+                <span class="material-symbols-outlined text-[19px] text-slate-400">history</span>
+                Historial de accesos
+              </a>
+              <a href="parking.html"
+                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-100
+                        text-slate-700 font-medium hover:bg-amber-50 hover:border-amber-200 hover:text-amber-700
+                        transition-all no-underline text-sm">
+                <span class="material-symbols-outlined text-[19px] text-slate-400">local_parking</span>
+                Mapa del estacionamiento
+              </a>
+            </div>
+          </div>
+
+          <!-- Cerrar sesión -->
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Sesión</p>
+            <button id="logoutBtn2"
+                    class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
+                           border border-slate-200 text-slate-600 font-semibold text-sm
+                           hover:bg-red-50 hover:border-red-200 hover:text-red-600 transition-all active:scale-95">
+              <span class="material-symbols-outlined text-[18px]">logout</span>
+              Cerrar sesión
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ══════════════ MODAL EDITAR PERFIL ══════════════ -->
+  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+        <!-- Header del modal -->
+        <div class="modal-header px-5 py-4 border-0" style="background:linear-gradient(135deg,#ffc107,#ffb300)">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-white text-[22px]" style='font-variation-settings:"FILL" 1'>manage_accounts</span>
+            <h5 class="modal-title fw-bold text-white mb-0">Editar información</h5>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+
+        <!-- Body del modal -->
+        <div class="modal-body p-5">
+          <form id="editProfileForm">
+
+            <div class="mb-4">
+              <label for="editName" class="form-label text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+                Nombre completo
+              </label>
+              <input type="text" id="editName"
+                     class="form-control profile-input"
+                     placeholder="Tu nombre" required />
+            </div>
+
+            <div class="mb-4">
+              <label for="editEmail" class="form-label text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+                Dirección de email
+              </label>
+              <input type="email" id="editEmail"
+                     class="form-control profile-input"
+                     readonly disabled />
+              <p class="text-[11px] text-slate-400 mt-1.5 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px]">info</span>
+                El email no puede modificarse.
+              </p>
+            </div>
+
+            <div class="mb-5">
+              <label for="editPlates" class="form-label text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">
+                Placas vehiculares
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-slate-50 border-slate-200 rounded-l-xl">
+                  <span class="material-symbols-outlined text-[18px] text-slate-400" style='font-variation-settings:"FILL" 1'>directions_car</span>
+                </span>
+                <input type="text" id="editPlates"
+                       class="form-control profile-input rounded-l-none"
+                       placeholder="ABC-123-D" />
+              </div>
+            </div>
+
+            <button type="submit" id="editProfileBtn"
+                    class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl
+                           bg-amber-400 hover:bg-amber-500 text-white font-bold text-sm
+                           shadow-sm transition-all active:scale-95 border-0">
+              <span class="material-symbols-outlined text-[18px]">save</span>
+              Guardar cambios
+            </button>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TOAST DE ÉXITO ══════════════ -->
+  <div id="successToast"
+       class="flex items-center gap-3 bg-white border border-green-200 px-4 py-3">
+    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+      <span class="material-symbols-outlined text-green-600 text-[18px]" style='font-variation-settings:"FILL" 1'>check_circle</span>
+    </div>
+    <div>
+      <p class="text-sm font-bold text-slate-900 mb-0">¡Cambios guardados!</p>
+      <p class="text-xs text-slate-500 mb-0">Tu perfil se actualizó correctamente.</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Drawer móvil -->
+  <script>
+    (function () {
+      const openBtn  = document.getElementById('mobileMenuBtn');
+      const closeBtn = document.getElementById('mobileCloseBtn');
+      const drawer   = document.getElementById('mobileDrawer');
+      const backdrop = document.getElementById('mobileBackdrop');
+
+      const open  = () => { drawer.classList.remove('hidden'); backdrop.classList.remove('hidden'); document.body.classList.add('drawer-open'); };
+      const close = () => { drawer.classList.add('hidden');    backdrop.classList.add('hidden');    document.body.classList.remove('drawer-open'); };
+
+      openBtn?.addEventListener('click', open);
+      closeBtn?.addEventListener('click', close);
+      backdrop?.addEventListener('click', close);
+
+      // Sincronizar nombre desktop → drawer
+      const sync = () => {
+        const nameDesktop = document.getElementById('userNameLabel');
+        const nameDrawer  = document.getElementById('drawerUserName');
+        if (nameDesktop && nameDrawer && nameDesktop.textContent.trim()) {
+          nameDrawer.textContent = nameDesktop.textContent.trim();
+        }
+        const adminDesktop = document.getElementById('adminNavLink');
+        const adminMobile  = document.getElementById('adminNavLinkMobile');
+        if (adminDesktop && adminMobile && !adminDesktop.classList.contains('hidden')) {
+          adminMobile.classList.remove('hidden');
+          adminMobile.classList.add('flex');
+        }
+      };
+
+      const observer = new MutationObserver(sync);
+      const nameTarget  = document.getElementById('userNameLabel');
+      const adminTarget = document.getElementById('adminNavLink');
+      if (nameTarget)  observer.observe(nameTarget,  { childList: true, characterData: true, subtree: true });
+      if (adminTarget) observer.observe(adminTarget, { attributes: true, attributeFilter: ['class'] });
+
+      // Botón cerrar sesión del drawer dispara el del desktop
+      document.getElementById('logoutBtnMobile')?.addEventListener('click', () => {
+        document.getElementById('logoutBtn')?.click();
+      });
+
+      // Botón cerrar sesión del panel lateral
+      document.getElementById('logoutBtn2')?.addEventListener('click', () => {
+        document.getElementById('logoutBtn')?.click();
+      });
+
+      window.addEventListener('resize', () => { if (window.innerWidth >= 1280) close(); });
+    })();
+  </script>
+
+  <script type="module" src="./assets/js/profile.js"></script>
 </body>
 </html>

@@ -19,6 +19,7 @@ if (editProfileModalElement) {
 // Elementos de visualización
 const displayName = document.getElementById('displayName');
 const displayEmail = document.getElementById('displayEmail');
+const displayEmailChip = document.getElementById('displayEmailChip');
 const displayPlates = document.getElementById('displayPlates');
 const userNameLabel = document.getElementById('userNameLabel'); // ID original de la navbar
 const profileAvatar = document.getElementById('profileAvatar');
@@ -28,6 +29,13 @@ let currentUser = null;
 
 checkAdminCache();
 
+function showSuccessToast() {
+    const toast = document.getElementById('successToast');
+    if (!toast) return;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
 /**
  * Actualiza todos los elementos de la interfaz con los datos del usuario
  */
@@ -35,6 +43,7 @@ function updateUI(user) {
     // Tarjeta de perfil
     if (displayName) displayName.textContent = user.name;
     if (displayEmail) displayEmail.textContent = user.email;
+    if (displayEmailChip) displayEmailChip.textContent = user.email;
     if (displayPlates) displayPlates.textContent = user.plates || "Sin registrar";
     
     // Navbar original
@@ -95,6 +104,8 @@ editProfileForm?.addEventListener('submit', async (e) => {
         });
 
         if (editProfileModal) editProfileModal.hide();
+        showSuccessToast();
+        
     } catch (error) {
         console.error("Error al guardar:", error);
         alert(error?.message || "No se pudieron guardar los cambios.");

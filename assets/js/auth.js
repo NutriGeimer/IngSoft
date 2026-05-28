@@ -2,13 +2,14 @@
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     onAuthStateChanged,
-    signOut
+    signOut,
+    sendPasswordResetEmail
     } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
    import {
     doc,
     setDoc,
     getDoc,
-    updateDoc, //agregado para actualizr el perfil
+    updateDoc,
     serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
     import{auth,db} from "./firebase-config.js"
@@ -60,6 +61,10 @@ export async function registerUser({ name, email, password, nplates }) {
 export async function loginUser({ email, password }) {
   const credential = await signInWithEmailAndPassword(auth, email, password);
   return credential.user;
+}
+
+export async function resetPassword(email) {
+  await sendPasswordResetEmail(auth, email);
 }
  
 export async function getCurrentUserProfile(uid) {
@@ -169,6 +174,8 @@ export function getFirebaseErrorMessage(error) {
       return "La contraseña es incorrecta.";
     case "auth/too-many-requests":
       return "Demasiados intentos. Intenta más tarde.";
+    case "auth/missing-email":
+      return "Por favor ingresa un correo electrónico.";
     default:
       return error?.message || "Ocurrió un error inesperado.";
   }

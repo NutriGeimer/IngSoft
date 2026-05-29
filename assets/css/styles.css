@@ -531,3 +531,39 @@ body.drawer-open { overflow: hidden; }
     min-height: 72px;
   }
 }
+
+/* admin-users-table → cards en móvil */
+@media (max-width: 720px) {
+  .admin-users-table { display: block; }
+  .admin-users-table thead { display: none; }
+  .admin-users-table tbody { display: block; }
+  .admin-users-table tr {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.85rem;
+    row-gap: 0.2rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .admin-users-table tr:hover { background: transparent !important; }
+  .admin-users-table td {
+    display: block;
+    padding: 0 !important;
+    border: none;
+  }
+  .admin-users-table td:first-child {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    align-self: center;
+  }
+  .admin-users-table td:not(:first-child) {
+    grid-column: 2;
+    min-width: 0;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-users-table { min-width: 0; }
+}
